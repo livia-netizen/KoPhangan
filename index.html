@@ -1,0 +1,2066 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>帕岸島旅行攻略</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Inter"', '"Noto Sans TC"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade {
+            animation: fadeIn 0.2s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen pb-28 transition-colors duration-200">
+
+    <!-- ==========================================
+         STICKY HEADER & MAIN NAVIGATION TABS
+         ========================================== -->
+    <header class="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="max-w-5xl mx-auto px-3.5 pt-3 pb-2">
+            <!-- Top Row: Brand & My Selected List Trigger -->
+            <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-teal-500 via-emerald-500 to-amber-400 flex items-center justify-center text-white font-black text-base shadow-md shrink-0">
+                        KP
+                    </div>
+                    <div>
+                        <h1 class="font-black text-lg sm:text-xl leading-tight tracking-tight text-slate-900 dark:text-white">
+                            帕岸島旅行攻略 <span class="text-teal-600 dark:text-teal-400 font-extrabold text-xs">KOH PHANGAN</span>
+                        </h1>
+                        <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400">
+                            2026.11.20 - 11.27｜住宿據點：<span class="text-teal-600 dark:text-teal-400">Nice Moon Resort Baan Tai</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-1.5">
+                    <!-- Selected Items Drawer Trigger -->
+                    <button type="button" onclick="window.openSelectedModal()" class="px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300 text-xs font-extrabold flex items-center gap-1.5 shadow-sm active:scale-95 transition">
+                        <i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400"></i>
+                        <span>已點選</span>
+                        <span id="header-sel-count" class="px-1.5 py-0.5 rounded-full bg-emerald-600 text-white text-[11px] leading-none">0</span>
+                    </button>
+                    <!-- Dark Mode Toggle -->
+                    <button type="button" onclick="window.toggleTheme()" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-amber-300 flex items-center justify-center active:scale-95 transition" title="切換深色/淺色模式">
+                        <i id="theme-icon" class="fa-solid fa-moon text-sm"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 4 Main Navigation Tabs -->
+            <nav class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-2.5 pb-1">
+                <button type="button" onclick="window.switchMainTab('tab-hubs')" id="btn-tab-hubs" class="main-tab-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 bg-teal-600 text-white shadow-sm">
+                    🗺️ 全島節點＆周邊推薦
+                </button>
+                <button type="button" onclick="window.switchMainTab('tab-spots')" id="btn-tab-spots" class="main-tab-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">
+                    🏖️ 美食＆娛樂總覽＋潛水試算
+                </button>
+                <button type="button" onclick="window.switchMainTab('tab-itinerary')" id="btn-tab-itinerary" class="main-tab-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">
+                    📅 6天5夜五套行程＆混搭
+                </button>
+                <button type="button" onclick="window.switchMainTab('tab-bkk')" id="btn-tab-bkk" class="main-tab-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200">
+                    🌃 11/20考山路＆11/27曼谷回程
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ==========================================
+         MAIN CONTENT CONTAINER
+         ========================================== -->
+    <main class="max-w-5xl mx-auto px-3.5 pt-4 space-y-5">
+
+        <!-- Compact Base Hotel & Full Moon Banner with Direct Navigation -->
+        <div class="p-3.5 rounded-3xl bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-600 text-white shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            <div class="space-y-1">
+                <div class="flex flex-wrap items-center gap-1.5">
+                    <span class="px-2.5 py-0.5 rounded-full bg-white/20 text-[11px] font-extrabold backdrop-blur-sm">
+                        🏠 住宿據點：Nice Moon Resort (Baan Tai)
+                    </span>
+                    <span class="px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[11px] font-black">
+                        🌕 11/24 (二) Full Moon Party @ Haad Rin
+                    </span>
+                </div>
+                <p class="text-xs text-teal-50 leading-relaxed">
+                    位於西南岸 Baan Tai，騎車至 Thong Sala 碼頭/潘提夜市僅 5-10 分鐘；前往東南端 Haad Rin 滿月派對約 15-25 分鐘（派對夜請搭雙條車勿酒駕）。
+                </p>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+                <a href="https://www.google.com/maps/search/?api=1&query=Nice+Moon+Resort+Koh+Phangan" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-2xl bg-white text-teal-800 font-extrabold text-xs shadow-sm hover:bg-teal-50 transition text-center">
+                    📍 導航回飯店
+                </a>
+                <a href="https://www.google.com/maps/search/?api=1&query=Haad+Rin+Nok+Beach+Koh+Phangan" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-2xl bg-amber-400 text-slate-950 font-extrabold text-xs shadow-sm hover:bg-amber-300 transition text-center">
+                    📍 導航滿月派對
+                </a>
+            </div>
+        </div>
+
+        <!-- ==============================================================
+             TAB 1: 全島 5 大節點（乾淨版面：直接呈現 5 大區域展開卡片 ＋ 互動方位地圖）
+             ============================================================== -->
+        <section id="tab-hubs" class="tab-panel space-y-4 animate-fade">
+
+            <!-- Collapsible SVG Island Map -->
+            <div class="bg-white dark:bg-slate-900 rounded-3xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm">
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                    <span class="text-xs font-extrabold text-slate-700 dark:text-slate-200">
+                        🧭 帕岸島全島 5 大節點方位圖（點擊地圖數字 1～5 或下方卡片即可展開周邊美食與娛樂）
+                    </span>
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="window.toggleAllZones()" id="btn-compact-toggle-all" class="px-2.5 py-1 rounded-xl bg-teal-50 dark:bg-teal-950/70 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800 text-xs font-extrabold hover:bg-teal-100 transition">
+                            ➕ 展開全部區域
+                        </button>
+                        <button type="button" onclick="window.toggleMapDrawer()" id="btn-toggle-map" class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-extrabold hover:bg-slate-200 transition">
+                            ▲ 收合地圖
+                        </button>
+                    </div>
+                </div>
+                <div id="island-map-drawer" style="display: block;" class="w-full max-h-56 sm:max-h-72 aspect-[16/9] bg-gradient-to-br from-sky-100 via-cyan-50 to-teal-100 dark:from-slate-800 dark:via-slate-900 dark:to-teal-950 rounded-2xl overflow-hidden relative border border-sky-200/70 dark:border-slate-700">
+                    <svg viewBox="0 0 560 350" class="w-full h-full select-none">
+                        <path d="M125,80 L210,28 L305,38 L390,35 L460,70 L490,145 L475,230 L455,300 L420,332 L380,285 L310,260 L200,265 L130,240 L82,185 L95,120 Z" 
+                              fill="#10B981" fill-opacity="0.28" stroke="#0D9488" stroke-width="3" stroke-linejoin="round"/>
+                        <path d="M240,250 L172,235 M240,250 L425,305 M240,250 L110,170 L140,90 M240,250 L295,150 L440,100" 
+                              stroke="#0F766E" stroke-width="2" stroke-dasharray="5,5" fill="none" opacity="0.6"/>
+
+                        <g class="cursor-pointer hover:opacity-90" onclick="window.jumpToHub('NW')">
+                            <circle cx="140" cy="90" r="18" fill="#2563EB" stroke="#ffffff" stroke-width="3"/>
+                            <text x="140" y="95" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="900">4</text>
+                            <text x="145" y="64" text-anchor="middle" fill="#1E3A8A" class="dark:fill-sky-300" font-size="11" font-weight="800">Haad Yao / Ko Ma</text>
+                        </g>
+
+                        <g class="cursor-pointer hover:opacity-90" onclick="window.jumpToHub('W')">
+                            <circle cx="110" cy="170" r="18" fill="#D97706" stroke="#ffffff" stroke-width="3"/>
+                            <text x="110" y="175" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="900">3</text>
+                            <text x="110" y="203" text-anchor="middle" fill="#92400E" class="dark:fill-amber-300" font-size="11" font-weight="800">Srithanu 西岸</text>
+                        </g>
+
+                        <g class="cursor-pointer hover:opacity-90" onclick="window.jumpToHub('SW')">
+                            <circle cx="172" cy="235" r="18" fill="#E11D48" stroke="#ffffff" stroke-width="3"/>
+                            <text x="172" y="240" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="900">1</text>
+                            <text x="150" y="269" text-anchor="middle" fill="#9F1239" class="dark:fill-rose-300" font-size="11" font-weight="800">Thong Sala 碼頭</text>
+                        </g>
+
+                        <g class="cursor-pointer" onclick="window.jumpToHub('SW')">
+                            <circle cx="240" cy="250" r="22" fill="#DC2626" fill-opacity="0.25"/>
+                            <circle cx="240" cy="250" r="12" fill="#DC2626" stroke="#ffffff" stroke-width="3"/>
+                            <rect x="260" y="223" width="165" height="40" rx="8" fill="#ffffff" stroke="#DC2626" stroke-width="2"/>
+                            <text x="342" y="240" text-anchor="middle" fill="#DC2626" font-size="11" font-weight="900">🏠 Nice Moon Resort</text>
+                            <text x="342" y="255" text-anchor="middle" fill="#334155" font-size="9.5" font-weight="700">Baan Tai 住宿據點</text>
+                        </g>
+
+                        <g class="cursor-pointer hover:opacity-90" onclick="window.jumpToHub('SE')">
+                            <circle cx="425" cy="305" r="19" fill="#0D9488" stroke="#FACC15" stroke-width="3.5"/>
+                            <text x="425" y="310" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="900">2</text>
+                            <rect x="315" y="325" width="195" height="22" rx="6" fill="#EA580C"/>
+                            <text x="412" y="340" text-anchor="middle" fill="#ffffff" font-size="10.5" font-weight="800">🌕 11/24 FULL MOON • Haad Rin</text>
+                        </g>
+
+                        <g class="cursor-pointer hover:opacity-90" onclick="window.jumpToHub('NE')">
+                            <circle cx="440" cy="100" r="18" fill="#7C3AED" stroke="#ffffff" stroke-width="3"/>
+                            <text x="440" y="105" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="900">5</text>
+                            <text x="435" y="73" text-anchor="middle" fill="#5B21B6" class="dark:fill-purple-300" font-size="11" font-weight="800">Bottle Beach / 東北岸</text>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- 5 Interactive Expandable Hub Cards -->
+            <div id="hubs-accordion-list" class="space-y-3.5">
+                <!-- Populated via window.renderHubsAccordion() -->
+            </div>
+        </section>
+
+        <!-- ==============================================================
+             TAB 2: 全島美食＆娛樂總覽 + 潛水試算器（支援搜尋、區域篩選、分類切換與全點導航）
+             ============================================================== -->
+        <section id="tab-spots" class="tab-panel hidden space-y-6 animate-fade">
+            <div class="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <h2 class="text-xl font-black">🏖️ 全島 45+「🍽️ 美食」與「🎉 娛樂」口袋名單總覽</h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">直接點擊任一卡片即可勾選「☑️ 已點選」加入行程清單；點擊右下角「📍 導航」直接開啟 Google Maps</p>
+                    </div>
+                    <!-- Search Input -->
+                    <div class="relative w-full sm:w-64">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input id="spot-search-input" type="text" oninput="window.renderAllSpotsGrid()" placeholder="搜尋美食、咖啡、沙灘、酒吧、瀑布..." class="w-full pl-8 pr-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-teal-500">
+                    </div>
+                </div>
+
+                <!-- Zone Filter Pills -->
+                <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+                    <span class="text-[11px] font-extrabold text-slate-400 shrink-0 mr-1">區域：</span>
+                    <button type="button" onclick="window.setSpotZone('ALL')" data-zone="ALL" class="spot-zone-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-extrabold bg-teal-600 text-white shadow-sm">全部區域</button>
+                    <button type="button" onclick="window.setSpotZone('SW')" data-zone="SW" class="spot-zone-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">① 通沙拉＆班泰</button>
+                    <button type="button" onclick="window.setSpotZone('SE')" data-zone="SE" class="spot-zone-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">② 哈林滿月派對區</button>
+                    <button type="button" onclick="window.setSpotZone('W')" data-zone="W" class="spot-zone-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">③ 西岸夕陽瑜伽區</button>
+                    <button type="button" onclick="window.setSpotZone('NW')" data-zone="NW" class="spot-zone-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">④ 西北岸沙洲浮潛</button>
+                    <button type="button" onclick="window.setSpotZone('NE')" data-zone="NE" class="spot-zone-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">⑤ 北岸＆東北岸秘境</button>
+                </div>
+
+                <!-- Simplified 2-Category Filter Pills (全部 / 🍽️ 美食 / 🎉 娛樂 / ☑️ 已點選) -->
+                <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+                    <button type="button" onclick="window.setSpotCategory('ALL')" data-cat="ALL" class="spot-cat-btn shrink-0 px-4 py-2 rounded-xl text-xs font-extrabold bg-slate-900 text-white dark:bg-teal-500 dark:text-slate-950 shadow-sm">
+                        全部顯示
+                    </button>
+                    <button type="button" onclick="window.setSpotCategory('FOOD')" data-cat="FOOD" class="spot-cat-btn shrink-0 px-4 py-2 rounded-xl text-xs font-extrabold bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+                        🍽️ 美食 (夜市/餐廳/早午餐/咖啡)
+                    </button>
+                    <button type="button" onclick="window.setSpotCategory('ENT')" data-cat="ENT" class="spot-cat-btn shrink-0 px-4 py-2 rounded-xl text-xs font-extrabold bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+                        🎉 娛樂 (海灘/瀑布/酒吧派對/潛水/瑜伽按摩)
+                    </button>
+                    <button type="button" onclick="window.setSpotCategory('SELECTED')" data-cat="SELECTED" class="spot-cat-btn shrink-0 px-4 py-2 rounded-xl text-xs font-extrabold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                        ☑️ 只看已點選
+                    </button>
+                </div>
+
+                <!-- All Spots Grid -->
+                <div id="all-spots-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3.5 pt-1">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+
+            <!-- 4 Dive Shops + 2 Dive Spots Comparison & Interactive Range Calculator (All with 📍 導航) -->
+            <div class="bg-gradient-to-br from-sky-950 via-teal-950 to-slate-900 text-white rounded-3xl p-5 sm:p-6 shadow-lg space-y-5 border border-cyan-500/20">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/15 pb-4">
+                    <div>
+                        <span class="text-[11px] font-extrabold uppercase tracking-wider text-cyan-300">SCUBA DIVING & SNORKELING</span>
+                        <h3 class="text-lg sm:text-xl font-black mt-0.5">🤿 帕岸島四家潛店與潛點比價 ＆ 互動式潛水費用試算器</h3>
+                    </div>
+                    <span class="text-xs bg-amber-400/20 text-amber-300 border border-amber-400/40 px-3 py-1 rounded-xl font-bold">
+                        ⚠️ 潛水後搭機需預留安全禁飛間隔（建議排 11/23）
+                    </span>
+                </div>
+
+                <!-- 4 Dive Shops + 2 Popular Dive/Snorkel Spots with Direct 📍 導航 -->
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+                    <div class="p-3.5 rounded-2xl bg-white/10 border border-white/15 flex flex-col justify-between gap-2">
+                        <div class="space-y-1">
+                            <div class="font-black text-sm text-cyan-300">1. Chaloklum Diving (北岸)</div>
+                            <div class="font-bold">船潛：約 ฿4,200 ｜ 浮潛：約 ฿1,300</div>
+                            <p class="text-slate-300 text-[11px]">北岸車程約 30-40 分，含裝備教練等須確認。</p>
+                        </div>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Chaloklum+Diving+Koh+Phangan" target="_blank" rel="noopener noreferrer" class="self-end px-3 py-1.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-xs transition flex items-center gap-1 shadow-sm">
+                            📍 導航
+                        </a>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-white/10 border border-white/15 flex flex-col justify-between gap-2">
+                        <div class="space-y-1">
+                            <div class="font-black text-sm text-cyan-300">2. Indigos Dive</div>
+                            <div class="font-bold">船潛：฿4,100-4,300 ｜ 浮潛：฿1,200-1,400</div>
+                            <p class="text-slate-300 text-[11px]">預訂前請確認店址與當季正式報價。</p>
+                        </div>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Indigos+Dive+Koh+Phangan" target="_blank" rel="noopener noreferrer" class="self-end px-3 py-1.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-xs transition flex items-center gap-1 shadow-sm">
+                            📍 導航
+                        </a>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-white/10 border border-white/15 flex flex-col justify-between gap-2">
+                        <div class="space-y-1">
+                            <div class="font-black text-sm text-cyan-300">3. Haad Rin Divers (東南端)</div>
+                            <div class="font-bold">船潛：฿4,100-4,300 ｜ 浮潛：฿1,200-1,500</div>
+                            <p class="text-slate-300 text-[11px]">東南端車程約 15-25 分，防寒衣等須確認。</p>
+                        </div>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Haad+Rin+Divers+Koh+Phangan" target="_blank" rel="noopener noreferrer" class="self-end px-3 py-1.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-xs transition flex items-center gap-1 shadow-sm">
+                            📍 導航
+                        </a>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-white/10 border border-white/15 flex flex-col justify-between gap-2">
+                        <div class="space-y-1">
+                            <div class="font-black text-sm text-cyan-300">4. Phangan Divers</div>
+                            <div class="font-bold">船潛：฿4,200-4,400 ｜ 浮潛：฿1,300-1,600</div>
+                            <p class="text-slate-300 text-[11px]">預訂前請確認船班與完整包含項目。</p>
+                        </div>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Phangan+Divers+Koh+Phangan" target="_blank" rel="noopener noreferrer" class="self-end px-3 py-1.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-xs transition flex items-center gap-1 shadow-sm">
+                            📍 導航
+                        </a>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-white/10 border border-white/15 flex flex-col justify-between gap-2">
+                        <div class="space-y-1">
+                            <div class="font-black text-sm text-amber-300">5. Sail Rock (帆船石船潛聖地)</div>
+                            <div class="font-bold">暹羅灣第一名潛點｜搭乘潛店船隻出海</div>
+                            <p class="text-slate-300 text-[11px]">巨岩魚群風暴；需確認是否適合新手與當日海況。</p>
+                        </div>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Sail+Rock+Dive+Site+Koh+Phangan" target="_blank" rel="noopener noreferrer" class="self-end px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs transition flex items-center gap-1 shadow-sm">
+                            📍 導航
+                        </a>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-white/10 border border-white/15 flex flex-col justify-between gap-2">
+                        <div class="space-y-1">
+                            <div class="font-black text-sm text-amber-300">6. Ko Ma Snorkeling (美哈德岸邊浮潛)</div>
+                            <div class="font-bold">免費下水｜租借面鏡呼吸管約 ฿150</div>
+                            <p class="text-slate-300 text-[11px]">不用搭船出海；同時體驗退潮連島沙洲與岸邊浮潛。</p>
+                        </div>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Koh+Ma+Mae+Haad+Beach+Koh+Phangan" target="_blank" rel="noopener noreferrer" class="self-end px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs transition flex items-center gap-1 shadow-sm">
+                            📍 導航
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Interactive Range Calculator -->
+                <div class="grid md:grid-cols-12 gap-5 items-start pt-2 border-t border-white/15">
+                    <div class="md:col-span-7 space-y-3">
+                        <p class="text-xs font-bold text-cyan-200">1. 點選主項目（體驗船潛或浮潛）：</p>
+                        <div class="grid sm:grid-cols-2 gap-2.5">
+                            <label class="cursor-pointer p-3 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/15 flex items-start gap-2.5">
+                                <input type="radio" name="dive_base" data-min="4100" data-max="4400" checked onchange="window.calcDiveTotal()" class="mt-1 accent-cyan-400">
+                                <div class="text-xs">
+                                    <div class="font-extrabold">體驗船潛 (Discover Scuba Diving)</div>
+                                    <div class="text-cyan-200 mt-0.5">預估：฿4,100 - 4,400 / 人</div>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer p-3 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/15 flex items-start gap-2.5">
+                                <input type="radio" name="dive_base" data-min="1200" data-max="1600" onchange="window.calcDiveTotal()" class="mt-1 accent-cyan-400">
+                                <div class="text-xs">
+                                    <div class="font-extrabold">出海浮潛 (Boat Snorkeling Trip)</div>
+                                    <div class="text-cyan-200 mt-0.5">預估：฿1,200 - 1,600 / 人</div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <p class="text-xs font-bold text-cyan-200 pt-1">2. 點選額外加購項目：</p>
+                        <div class="grid sm:grid-cols-2 gap-2">
+                            <label class="cursor-pointer p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between text-xs">
+                                <span class="flex items-center gap-2"><input type="checkbox" class="dive-addon accent-cyan-400" data-min="500" data-max="1500" onchange="window.calcDiveTotal()"> 水下照片 / 影片</span>
+                                <span class="font-bold text-cyan-300">+฿500 - 1,500</span>
+                            </label>
+                            <label class="cursor-pointer p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between text-xs">
+                                <span class="flex items-center gap-2"><input type="checkbox" class="dive-addon accent-cyan-400" data-min="500" data-max="1000" onchange="window.calcDiveTotal()"> 水下相機租借</span>
+                                <span class="font-bold text-cyan-300">+฿500 - 1,000</span>
+                            </label>
+                            <label class="cursor-pointer p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between text-xs">
+                                <span class="flex items-center gap-2"><input type="checkbox" class="dive-addon accent-cyan-400" data-min="150" data-max="300" onchange="window.calcDiveTotal()"> 防寒衣另租</span>
+                                <span class="font-bold text-cyan-300">+฿150 - 300</span>
+                            </label>
+                            <label class="cursor-pointer p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between text-xs">
+                                <span class="flex items-center gap-2"><input type="checkbox" class="dive-addon accent-cyan-400" data-min="200" data-max="600" onchange="window.calcDiveTotal()"> 陸上專車接送 / 趟</span>
+                                <span class="font-bold text-cyan-300">+฿200 - 600</span>
+                            </label>
+                            <label class="cursor-pointer p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between text-xs">
+                                <span class="flex items-center gap-2"><input type="checkbox" class="dive-addon accent-cyan-400" data-min="100" data-max="300" onchange="window.calcDiveTotal()"> 教練小費 (自願)</span>
+                                <span class="font-bold text-cyan-300">+฿100 - 300</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-5 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 space-y-2.5">
+                        <div class="text-xs text-cyan-200 font-bold">單人潛水 / 浮潛預估總花費區間</div>
+                        <div id="dive-total-display" class="text-2xl sm:text-3xl font-black text-amber-300">฿4,100 - ฿4,400</div>
+                        <p class="text-xs text-slate-200 leading-relaxed">
+                            💡 提醒：預訂前請確認氣瓶數、潛點（如 Sail Rock）、教練比例、保險與取消政策；毛巾建議自備。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==============================================================
+             TAB 3: 6天5夜・5套完整行程 & 自由混搭器 (每日皆附 📍 快捷導航膠囊)
+             ============================================================== -->
+        <section id="tab-itinerary" class="tab-panel hidden space-y-6 animate-fade">
+            <div class="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <span class="text-xs font-extrabold text-teal-600 dark:text-teal-400">2026.11.21 (六) — 11.26 (四) • 6 DAYS 5 NIGHTS</span>
+                        <h2 class="text-xl sm:text-2xl font-black mt-0.5">📅 6天5夜・五套完整行程切換 ＆ 每日自由混搭器</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">每一天卡片皆可展開或收合，並附有當日所有景點、海灘、夜市與餐廳的「<strong>📍 導航</strong>」按鈕！</p>
+                    </div>
+                    <div class="inline-flex p-1 rounded-2xl bg-slate-100 dark:bg-slate-800 self-start">
+                        <button type="button" id="btn-mode-std" onclick="window.setItineraryMode('STD')" class="px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-teal-600 text-white shadow-sm transition">
+                            📘 五套標準行程
+                        </button>
+                        <button type="button" id="btn-mode-mix" onclick="window.setItineraryMode('MIX')" class="px-3.5 py-1.5 rounded-xl text-xs font-extrabold text-slate-600 dark:text-slate-300 transition">
+                            🛠️ 每日自由混搭
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 5 Plan Selector Buttons -->
+                <div id="std-plan-selector" class="grid grid-cols-2 sm:grid-cols-5 gap-2.5"></div>
+
+                <!-- Active Plan Summary Banner + Expand/Collapse Days Controls -->
+                <div id="active-plan-banner" class="p-4 rounded-2xl bg-teal-50 dark:bg-teal-950/50 border border-teal-200 dark:border-teal-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <div id="plan-banner-title" class="font-black text-base text-teal-900 dark:text-teal-200"></div>
+                        <p id="plan-banner-desc" class="text-xs text-slate-600 dark:text-slate-300 mt-0.5"></p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 shrink-0">
+                        <button type="button" onclick="window.expandAllDays()" class="px-3 py-2 rounded-xl bg-teal-600 text-white text-xs font-extrabold shadow-sm">➕ 展開全部</button>
+                        <button type="button" onclick="window.collapseAllDays()" class="px-3 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-extrabold">➖ 收合全部</button>
+                        <div class="bg-white dark:bg-slate-900 px-3.5 py-1.5 rounded-xl border border-teal-200 dark:border-teal-800 text-right">
+                            <div class="text-[10px] font-bold text-slate-400">6天個人預估總支出</div>
+                            <div id="plan-banner-budget" class="text-sm sm:text-base font-black text-teal-600 dark:text-teal-400"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6-Day Schedule Cards -->
+                <div id="itinerary-days-container" class="space-y-3"></div>
+            </div>
+        </section>
+
+        <!-- ==============================================================
+             TAB 4: 11/20 BKK→考山路交通 & 11/27 曼谷回程全攻略（全附 📍 導航）
+             ============================================================== -->
+        <section id="tab-bkk" class="tab-panel hidden space-y-6 animate-fade">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 bg-white dark:bg-slate-900 p-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                <button type="button" id="bkk-sub-go" onclick="window.switchBkkSub('GO')" class="py-2.5 px-3 rounded-xl text-xs sm:text-sm font-black bg-teal-600 text-white shadow-sm transition">
+                    🚌 區塊一：11/20(五) BKK 機場 → 考山路交通＆店家
+                </button>
+                <button type="button" id="bkk-sub-back" onclick="window.switchBkkSub('BACK')" class="py-2.5 px-3 rounded-xl text-xs sm:text-sm font-black text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                    🌃 區塊二：11/27(五) 曼谷回程（飯店青旅/夜生活/古蹟導航）
+                </button>
+            </div>
+
+            <!-- 區塊一: 11/20 BKK -> Khao San Road -->
+            <div id="bkk-panel-go" class="space-y-5">
+                <div class="bg-amber-50 dark:bg-amber-950/50 border-2 border-amber-400/80 rounded-3xl p-4 sm:p-5 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <span class="px-2.5 py-0.5 rounded-full bg-amber-500 text-white text-[11px] font-black">11/20 (五) 當晚黃金時間軸</span>
+                            <h3 class="text-base sm:text-lg font-black text-amber-950 dark:text-amber-200 mt-1">
+                                16:40 抵達 BKK ｜ 22:00 Boonsiri 夜車出發（建議 21:00 前報到）
+                            </h3>
+                            <p class="text-xs text-amber-900/90 dark:text-amber-200/80 mt-0.5">
+                                ⚠️ 最晚 21:15 前完成報到；<strong>若出關已超過 18:30，建議直接搭 Grab 或計程車</strong>。集合點：<strong>Boonsiri Khao San Office</strong>。
+                            </p>
+                        </div>
+                        <div class="flex flex-wrap gap-2 shrink-0">
+                            <button type="button" onclick="window.copyText('13.76137, 100.49922', '📋 已複製 Boonsiri 導航座標：13.76137, 100.49922')" class="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-extrabold transition flex items-center gap-1.5 shadow-sm">
+                                <i class="fa-regular fa-copy"></i> 複製座標 13.76137, 100.49922
+                            </button>
+                            <a href="https://www.google.com/maps/search/?api=1&query=13.76137,100.49922" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs font-extrabold transition flex items-center gap-1.5 shadow-sm">
+                                📍 導航 Boonsiri 考山路辦公室
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-7 gap-2 pt-1 text-xs">
+                        <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-amber-200 dark:border-amber-800"><div class="font-black text-amber-600">16:40</div><div class="font-bold mt-0.5">抵達 BKK</div></div>
+                        <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-amber-200 dark:border-amber-800"><div class="font-black text-amber-600">16:40-18:00</div><div class="font-bold mt-0.5">入境、換匯、網路</div></div>
+                        <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-amber-200 dark:border-amber-800"><div class="font-black text-amber-600">18:00-19:30</div><div class="font-bold mt-0.5">前往考山路</div></div>
+                        <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-amber-200 dark:border-amber-800"><div class="font-black text-amber-600">19:30-20:30</div><div class="font-bold mt-0.5">晚餐 / 補給</div></div>
+                        <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-amber-200 dark:border-amber-800"><div class="font-black text-amber-600">20:30-21:00</div><div class="font-bold mt-0.5">找 Boonsiri 櫃檯</div></div>
+                        <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-rose-300 dark:border-rose-800"><div class="font-black text-rose-600">21:00-21:15</div><div class="font-bold mt-0.5">完成報到領票</div></div>
+                        <div class="p-2.5 rounded-xl bg-teal-600 text-white"><div class="font-black">22:00 準時</div><div class="font-bold mt-0.5">夜車出發</div></div>
+                    </div>
+                </div>
+
+                <!-- 4 Transport Options (Each with 📍 導航 buttons) -->
+                <div class="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <h4 class="font-black text-base">🚖 BKK 機場 → 考山路 4 種交通方式比價與直接導航</h4>
+                            <p class="text-xs text-slate-500">優先順序：Grab 叫車 ＞ 官方排班計程車 ＞ Airport Rail Link + 計程車 ＞ S1 巴士</p>
+                        </div>
+                        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+                            <button type="button" onclick="window.filterGoTransport('ALL')" data-gotrans="ALL" class="go-trans-btn px-3 py-1.5 rounded-xl text-xs font-extrabold bg-teal-600 text-white">全部比較</button>
+                            <button type="button" onclick="window.filterGoTransport('A')" data-gotrans="A" class="go-trans-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800">A. Grab</button>
+                            <button type="button" onclick="window.filterGoTransport('B')" data-gotrans="B" class="go-trans-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800">B. 排班計程車</button>
+                            <button type="button" onclick="window.filterGoTransport('C')" data-gotrans="C" class="go-trans-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800">C. 機捷+計程車</button>
+                            <button type="button" onclick="window.filterGoTransport('D')" data-gotrans="D" class="go-trans-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800">D. S1巴士</button>
+                        </div>
+                    </div>
+
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div data-transcard="A" class="go-trans-card p-4 rounded-2xl bg-teal-50/40 dark:bg-teal-950/20 border-2 border-teal-500 flex flex-col justify-between gap-3">
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="px-2.5 py-0.5 rounded-md bg-teal-600 text-white text-xs font-black">A｜Grab 叫車 (首選)</span>
+                                    <span class="text-xs font-extrabold text-teal-600 dark:text-teal-400">45-90分｜約 ฿450-800/車</span>
+                                </div>
+                                <ol class="text-xs text-slate-600 dark:text-slate-300 space-y-1 list-decimal pl-4 leading-relaxed">
+                                    <li>出關領行李後，搭電梯至 <strong>1樓 Level 1</strong>。</li>
+                                    <li>打開 Grab 搜尋「<strong>Boonsiri Khao San Office</strong>」，核對座標 <code>13.76137, 100.49922</code>。</li>
+                                    <li>上車點選「Suvarnabhumi Airport Grab Pick-up Point」，前往 <strong>1樓 Gate 4</strong>。</li>
+                                    <li>若顯示 4 位 PIN，至 A-D 車道排隊並向司機提供 PIN。</li>
+                                </ol>
+                            </div>
+                            <div class="flex flex-wrap gap-1.5 pt-2 border-t border-teal-200/60 dark:border-teal-800/60">
+                                <a href="https://www.google.com/maps/search/?api=1&query=Suvarnabhumi+Airport+Grab+Pickup" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-xl bg-teal-600 text-white text-[11px] font-extrabold">📍 導航：BKK 1樓 Gate 4 上車點</a>
+                                <a href="https://www.google.com/maps/search/?api=1&query=13.76137,100.49922" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-xl bg-slate-900 text-white text-[11px] font-extrabold">📍 導航：Boonsiri 辦公室</a>
+                            </div>
+                        </div>
+
+                        <div data-transcard="B" class="go-trans-card p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 flex flex-col justify-between gap-3">
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="px-2.5 py-0.5 rounded-md bg-slate-800 text-white text-xs font-black">B｜機場官方排班計程車</span>
+                                    <span class="text-xs font-extrabold text-slate-600 dark:text-slate-300">45-90分｜約 ฿400-650/車</span>
+                                </div>
+                                <ol class="text-xs text-slate-600 dark:text-slate-300 space-y-1 list-decimal pl-4 leading-relaxed">
+                                    <li>出關後到 <strong>1樓 Level 1，Gate 4-7</strong>。</li>
+                                    <li>跟著「Public Taxi」指標，在自助取號機領號碼。</li>
+                                    <li>請司機跳錶 (Meter)；車資＝跳錶＋機場費 ฿50＋實際過路費。</li>
+                                </ol>
+                            </div>
+                            <div class="flex flex-wrap gap-1.5 pt-2 border-t border-slate-200 dark:border-slate-700">
+                                <a href="https://www.google.com/maps/search/?api=1&query=Suvarnabhumi+Airport" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-xl bg-teal-600 text-white text-[11px] font-extrabold">📍 導航：BKK 機場 Public Taxi</a>
+                                <a href="https://www.google.com/maps/search/?api=1&query=13.76137,100.49922" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-xl bg-slate-900 text-white text-[11px] font-extrabold">📍 導航：Boonsiri 給司機看</a>
+                            </div>
+                        </div>
+
+                        <div data-transcard="C" class="go-trans-card p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 flex flex-col justify-between gap-3">
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="px-2.5 py-0.5 rounded-md bg-sky-700 text-white text-xs font-black">C｜Airport Rail Link + 計程車</span>
+                                    <span class="text-xs font-extrabold text-sky-600 dark:text-sky-400">60-100分｜約 ฿145-245/人</span>
+                                </div>
+                                <ol class="text-xs text-slate-600 dark:text-slate-300 space-y-1 list-decimal pl-4 leading-relaxed">
+                                    <li>前往<strong>地下 B1</strong> 搭機捷至終點站 <strong>Phaya Thai (A8)</strong>，票價 ฿45（約 30 分）。</li>
+                                    <li>出站轉搭 Grab / 計程車前往 Boonsiri 辦公室（約 20-40 分）。</li>
+                                </ol>
+                            </div>
+                            <div class="flex flex-wrap gap-1.5 pt-2 border-t border-slate-200 dark:border-slate-700">
+                                <a href="https://www.google.com/maps/search/?api=1&query=Phaya+Thai+ARL+Station+Bangkok" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-xl bg-sky-600 text-white text-[11px] font-extrabold">📍 導航：Phaya Thai (A8終點站)</a>
+                                <a href="https://www.google.com/maps/search/?api=1&query=13.76137,100.49922" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-xl bg-slate-900 text-white text-[11px] font-extrabold">📍 導航：Boonsiri 辦公室</a>
+                            </div>
+                        </div>
+
+                        <div data-transcard="D" class="go-trans-card p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 flex flex-col justify-between gap-3">
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="px-2.5 py-0.5 rounded-md bg-amber-700 text-white text-xs font-black">D｜S1 機場巴士 (最便宜)</span>
+                                    <span class="text-xs font-extrabold text-amber-600 dark:text-amber-400">60-100分｜約 ฿60/人</span>
+                                </div>
+                                <ol class="text-xs text-slate-600 dark:text-slate-300 space-y-1 list-decimal pl-4 leading-relaxed">
+                                    <li>到 <strong>1樓 Gate 7</strong> 搭往考山路的 S1 巴士（車上付現 ฿60）。</li>
+                                    <li>下車後依導航步行至 Boonsiri 辦公室（適合 <strong>18:00 前出關且行李少</strong>）。</li>
+                                </ol>
+                            </div>
+                            <div class="flex flex-wrap gap-1.5 pt-2 border-t border-slate-200 dark:border-slate-700">
+                                <a href="https://www.google.com/maps/search/?api=1&query=Khao+San+Road+Bangkok" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-xl bg-amber-600 text-white text-[11px] font-extrabold">📍 導航：考山路 (Khao San Rd)</a>
+                                <a href="https://www.google.com/maps/search/?api=1&query=13.76137,100.49922" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-xl bg-slate-900 text-white text-[11px] font-extrabold">📍 導航：Boonsiri 辦公室</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Khao San Shops (Selectable as 🎉 娛樂 + Direct 📍 導航) -->
+                <div class="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+                    <h4 class="font-black text-base">🌿 考山路補充店家（點擊卡片可勾選加入清單，點擊「📍 導航」直接前往）</h4>
+                    <div id="ks-shops-grid" class="grid sm:grid-cols-2 gap-3.5"></div>
+                </div>
+            </div>
+
+            <!-- 區塊二: 11/27 凌晨 02:00 抵達曼谷 BKK 回程全攻略 -->
+            <div id="bkk-panel-back" class="hidden space-y-6">
+                <!-- Timeline -->
+                <div class="bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800 rounded-3xl p-4 sm:p-5 space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <span class="px-2.5 py-0.5 rounded-full bg-indigo-600 text-white text-[11px] font-black">2026.11.27 (五) 回台灣前的曼谷輕旅行</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-extrabold text-indigo-700 dark:text-indigo-300">✈️ 華航 CI840 18:35 起飛飛高雄（15:00 建議回機場）</span>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Suvarnabhumi+Airport+Bangkok" target="_blank" rel="noopener noreferrer" class="px-3 py-1 rounded-xl bg-indigo-600 text-white text-xs font-extrabold">📍 導航 BKK 機場</a>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs pt-1">
+                        <div class="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-indigo-100 dark:border-indigo-900"><div class="font-black text-indigo-600">11/26(四) 13:15</div><div class="font-bold mt-0.5">Thong Sala 碼頭出發</div></div>
+                        <div class="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-indigo-100 dark:border-indigo-900"><div class="font-black text-rose-600">11/27(五) 02:00</div><div class="font-bold mt-0.5">抵達曼谷 BKK</div></div>
+                        <div class="p-3 rounded-2xl bg-white dark:bg-slate-900 border border-indigo-100 dark:border-indigo-900"><div class="font-black text-amber-600">09:00 - 13:30</div><div class="font-bold mt-0.5">1–2 個文化名勝</div></div>
+                        <div class="p-3 rounded-2xl bg-teal-600 text-white"><div class="font-black">15:00 回 BKK</div><div class="font-bold mt-0.5">18:35 CI840 起飛</div></div>
+                    </div>
+                </div>
+
+                <!-- 1. 四大類休息與過夜選擇（全部可點選 ＋ 附 📍 導航） -->
+                <div class="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <h4 class="font-black text-lg">🛏️ 凌晨 02:00 抵達：四大類休息＆過夜選擇（可點選＋直接 📍 導航）</h4>
+                            <p class="text-xs text-slate-500 mt-0.5">💡 凌晨入住一般飯店或青旅，須訂「<strong>11/26 入住、11/27 退房</strong>」並備註凌晨 Check-in；勿訂轉機管制區內的 Miracle Transit Hotel。</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+                        <button type="button" onclick="window.setBkkRestCat('ALL')" data-restcat="ALL" class="bkk-rest-cat-btn shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-indigo-600 text-white">全部顯示 (13)</button>
+                        <button type="button" onclick="window.setBkkRestCat('HOTEL')" data-restcat="HOTEL" class="bkk-rest-cat-btn shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">🏨 機場周邊飯店 (3)</button>
+                        <button type="button" onclick="window.setBkkRestCat('POD')" data-restcat="POD" class="bkk-rest-cat-btn shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">🛌 B1 機場睡眠艙 (2)</button>
+                        <button type="button" onclick="window.setBkkRestCat('HOSTEL')" data-restcat="HOSTEL" class="bkk-rest-cat-btn shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">🎒 青年旅館 Hostels (4)</button>
+                        <button type="button" onclick="window.setBkkRestCat('TEMP')" data-restcat="TEMP" class="bkk-rest-cat-btn shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">💆‍♀️ 24H臨時休息/按摩過夜 (4)</button>
+                    </div>
+
+                    <div id="bkk-rest-grid" class="grid sm:grid-cols-2 gap-3.5"></div>
+                </div>
+
+                <!-- 2. 11/27 凌晨 02:00+ 曼谷深夜夜生活＆續攤推薦（全部可點選 ＋ 附 📍 導航） -->
+                <div class="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <h4 class="font-black text-lg">🎧 11/27 凌晨 02:00+ 曼谷深夜夜生活＆續攤推薦（可點選＋直接 📍 導航）</h4>
+                            <p class="text-xs text-slate-500 mt-0.5">大件行李可先寄放 BKK 機場 B1/4F 24H 寄存處，輕裝搭 Grab 直奔營業到清晨的夜店、深夜食堂或匯狂夜市</p>
+                        </div>
+                        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+                            <button type="button" onclick="window.setBkkSpotCat('ALL')" data-bkkcat="ALL" class="bkk-night-cat-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-extrabold bg-slate-900 text-white dark:bg-teal-500 dark:text-slate-950">全部 (7)</button>
+                            <button type="button" onclick="window.setBkkSpotCat('CLUB')" data-bkkcat="CLUB" class="bkk-night-cat-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">🎧 營業到天亮夜店 (4)</button>
+                            <button type="button" onclick="window.setBkkSpotCat('BAR')" data-bkkcat="BAR" class="bkk-night-cat-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">🍸 深夜居酒屋/調酒吧 (2)</button>
+                            <button type="button" onclick="window.setBkkSpotCat('MARKET')" data-bkkcat="MARKET" class="bkk-night-cat-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">🦐 匯狂夜市＆象神 (1)</button>
+                        </div>
+                    </div>
+
+                    <div id="bkk-nightlife-grid" class="grid sm:grid-cols-2 gap-3.5"></div>
+                </div>
+
+                <!-- 3. 11/27 白天曼谷 4 大文化名勝 & 3 種半日遊方案時間表（每一步皆附 📍 導航） & 5件事 Check-list -->
+                <div class="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+                    <div>
+                        <h4 class="font-black text-lg">🏛️ 白天曼谷文化名勝半日遊（09:00 - 15:00｜以 BKK 機場周邊優先）</h4>
+                        <p class="text-xs text-slate-500 mt-0.5">點擊下方 4 大文化名勝卡片即可勾選加入清單，或點擊「📍 導航」開啟地圖路線</p>
+                        <div id="bkk-landmarks-grid" class="grid sm:grid-cols-2 gap-3.5 mt-3"></div>
+                    </div>
+
+                    <div class="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-3">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <h5 class="font-black text-base">🗺️ 11/27 白天 3 種不趕路文化半日遊方案切換（各時段皆附 📍 導航）：</h5>
+                            <div class="flex items-center gap-1.5">
+                                <button type="button" onclick="window.selectBkkTour('A')" id="btn-bkktour-A" class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-teal-600 text-white">方案 A (三頭象神+臥佛)</button>
+                                <button type="button" onclick="window.selectBkkTour('B')" id="btn-bkktour-B" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800">方案 B (暹羅古城)</button>
+                                <button type="button" onclick="window.selectBkkTour('C')" id="btn-bkktour-C" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800">方案 C (金碧寺+臥佛)</button>
+                            </div>
+                        </div>
+                        <div id="bkk-tour-detail-box" class="p-4 rounded-2xl bg-teal-50/50 dark:bg-teal-950/30 border border-teal-200 dark:border-teal-800"></div>
+                    </div>
+
+                    <div class="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-2">
+                        <h5 class="font-black text-sm">✅ 回程當天必記得的 5 件事（點擊可打勾）</h5>
+                        <div id="bkk-checklist-box" class="grid sm:grid-cols-2 lg:grid-cols-5 gap-2.5 text-xs"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==========================================
+         STICKY BOTTOM SELECTION BAR (即時顯示已點選的美食＆娛樂)
+         ========================================== -->
+    <div class="fixed bottom-3 left-0 right-0 z-40 px-3.5 pointer-events-none">
+        <div class="max-w-xl mx-auto bg-slate-900/95 dark:bg-slate-800/95 text-white backdrop-blur-md rounded-2xl p-2.5 px-4 shadow-2xl border border-white/15 flex items-center justify-between gap-3 pointer-events-auto">
+            <div class="flex items-center gap-2.5 text-xs">
+                <span class="w-7 h-7 rounded-xl bg-emerald-500 text-slate-950 font-black flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-check"></i>
+                </span>
+                <div>
+                    <div class="font-black text-xs sm:text-sm">
+                        我已點選：<span id="bar-food-count" class="text-amber-300">0</span> 美食 ・ <span id="bar-ent-count" class="text-purple-300">0</span> 娛樂
+                    </div>
+                    <div class="text-[10px] text-slate-300">點擊卡片空白處加入清單；點「📍 導航」直接開地圖</div>
+                </div>
+            </div>
+            <button type="button" onclick="window.openSelectedModal()" class="shrink-0 px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs shadow-sm active:scale-95 transition">
+                📋 已選清單 (<span id="bar-total-count">0</span>)
+            </button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         SELECTED ITEMS MODAL DRAWER
+         ========================================== -->
+    <div id="selected-modal" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-xl rounded-t-3xl sm:rounded-3xl max-h-[85vh] flex flex-col border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden animate-fade">
+            <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                <div>
+                    <h3 class="font-black text-base flex items-center gap-2">
+                        <i class="fa-solid fa-clipboard-check text-emerald-500"></i>
+                        <span>我點選的「🍽️ 美食」與「🎉 娛樂」清單</span>
+                    </h3>
+                    <p class="text-[11px] text-slate-400 mt-0.5">每個項目右側皆可點擊「📍 導航」直接開啟 Google Maps 路線</p>
+                </div>
+                <button type="button" onclick="window.closeSelectedModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Modal Filter & Actions -->
+            <div class="px-4 py-2.5 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-1.5">
+                    <button type="button" onclick="window.setModalCat('ALL')" id="mcat-ALL" class="px-3 py-1 rounded-xl text-xs font-extrabold bg-slate-900 text-white dark:bg-teal-500 dark:text-slate-950">全部</button>
+                    <button type="button" onclick="window.setModalCat('FOOD')" id="mcat-FOOD" class="px-3 py-1 rounded-xl text-xs font-bold bg-white dark:bg-slate-900 text-amber-700 dark:text-amber-300 border border-slate-200 dark:border-slate-700">🍽️ 美食</button>
+                    <button type="button" onclick="window.setModalCat('ENT')" id="mcat-ENT" class="px-3 py-1 rounded-xl text-xs font-bold bg-white dark:bg-slate-900 text-purple-700 dark:text-purple-300 border border-slate-200 dark:border-slate-700">🎉 娛樂</button>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <button type="button" onclick="window.copySelectedList()" class="px-3 py-1 rounded-xl bg-teal-600 text-white text-xs font-extrabold flex items-center gap-1">
+                        <i class="fa-regular fa-copy"></i> 複製清單
+                    </button>
+                    <button type="button" onclick="window.clearAllSelected()" class="px-2.5 py-1 rounded-xl bg-rose-50 dark:bg-rose-950 text-rose-600 dark:text-rose-300 text-xs font-bold">
+                        清空
+                    </button>
+                </div>
+            </div>
+
+            <div id="selected-modal-list" class="p-4 overflow-y-auto space-y-2.5 flex-1"></div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         TOAST NOTIFICATION
+         ========================================== -->
+    <div id="toast-box" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 hidden px-4 py-2 rounded-2xl bg-slate-900 text-white text-xs font-extrabold shadow-xl flex items-center gap-2">
+        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="toast-msg">操作成功</span>
+    </div>
+
+    <!-- ==========================================
+         UNIFIED, BUG-FREE JAVASCRIPT ENGINE
+         ========================================== -->
+    <script>
+        // Helper to generate Google Maps Search/Navigation URL
+        function getNavUrl(query) {
+            return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query);
+        }
+
+        // -----------------------------------------------------------
+        // 1. UNIFIED DATASET: ONLY TWO CATEGORIES ('FOOD' = 🍽️ 美食, 'ENT' = 🎉 娛樂)
+        // -----------------------------------------------------------
+        const HUBS_DATA = [
+            {
+                key: 'SW',
+                num: 1,
+                badgeBg: 'bg-rose-600',
+                borderActive: 'border-rose-500',
+                title: 'Thong Sala Pier & Baan Tai（通沙拉主碼頭與班泰住宿區）',
+                desc: '主碼頭、租車補給、潘提夜市 (Phantip Night Market)、週六步行街、海景餐廳、精品咖啡與泰式按摩。',
+                driveBase: '距離住宿 3–12 分鐘',
+                hubNavQuery: 'Thong Sala Pier Koh Phangan',
+                items: [
+                    // 🍽️ 美食 (FOOD)
+                    { id: 'sw_1', name: 'Phantip Night Market 潘提夜市', cat: 'FOOD', subTag: '夜市小吃', defaultSel: true, drive: '機車約 5-10分', price: '฿80-200/人', desc: '通沙拉最熱鬧美食夜市！必吃海南雞飯、海鮮串燒、芒果糯米飯、泰式炒河粉。', query: 'Pantip Night Food Market Koh Phangan' },
+                    { id: 'sw_2', name: 'Thong Sala 本地市集 (Local Market)', cat: 'FOOD', subTag: '在地市集', defaultSel: false, drive: '機車約 5-10分', price: '฿60-150/人', desc: '必吃道地 Pad Thai、綠咖哩、泰式烤雞與現打芒果冰沙。', query: 'Thong Sala Market Koh Phangan' },
+                    { id: 'sw_5', name: "Bubba's Coffee Baan Tai", cat: 'FOOD', subTag: '早午餐・咖啡', defaultSel: true, drive: '機車約 3-10分', price: '฿250-450/人', desc: '離 Nice Moon Resort 超近的人氣早午餐，必點班尼迪克蛋、酪梨吐司與精品咖啡。', query: 'Bubbas Coffee Baan Tai Koh Phangan' },
+                    { id: 'sw_6', name: "Fisherman's Restaurant and Bar", cat: 'FOOD', subTag: '海景海鮮餐廳', defaultSel: true, drive: '機車約 5-10分', price: '฿400-800/人', desc: 'Baan Tai 浪漫海景船型沙發座位，推薦鮮魚料理、海鮮拼盤與特調雞尾酒。', query: 'Fishermans Restaurant and Bar Koh Phangan' },
+                    { id: 'sw_7', name: 'Sea Love Beach Bar & Restaurant', cat: 'FOOD', subTag: '海灘景觀餐廳', defaultSel: false, drive: '機車約 5-15分', price: '฿300-700/人', desc: 'Baan Tai 海灘座位，推薦碳烤鮮魚、泰式海鮮沙拉與熱帶調酒。', query: 'Sea Love Beach Bar Restaurant Koh Phangan' },
+                    { id: 'sw_4', name: "Nira's Home Bakery", cat: 'FOOD', subTag: '烘焙・三明治', defaultSel: false, drive: '機車約 5-12分', price: '฿150-350/人', desc: '通沙拉經典烘焙坊，供應新鮮歐式麵包、三明治、咖啡及甜點。', query: 'Niras Home Bakery Koh Phangan' },
+                    { id: 'sw_10', name: 'Dots Coffee（碼頭旁冷氣精品咖啡）', cat: 'FOOD', subTag: '精品咖啡', defaultSel: false, drive: '機車約 5分', price: '฿120-280/人', desc: '通沙拉碼頭旁冷氣極強的工業風精品咖啡館，推薦 Dirty Coffee 與可頌早午餐。', query: 'Dots Coffee Koh Phangan' },
+                    { id: 'sw_11', name: 'Hundred Islands Coffee Bar', cat: 'FOOD', subTag: '澳式早午餐', defaultSel: false, drive: '機車約 5分', price: '฿200-350/人', desc: 'Baan Tai 主幹道旁高評價澳式早午餐、手沖咖啡與酸種麵包料理。', query: 'Hundred Islands Coffee Bar Koh Phangan' },
+                    { id: 'sw_12', name: 'Ando Loco（墨西哥塔可餐酒館）', cat: 'FOOD', subTag: '異國美食', defaultSel: false, drive: '機車約 5分', price: '฿250-500/人', desc: 'Baan Tai 超人氣墨西哥塔可 (Tacos)、起司餡餅與瑪格麗特調酒，氣氛熱鬧。', query: 'Ando Loco Koh Phangan' },
+                    { id: 'sw_13', name: 'Sweet Shell（手工義式冰淇淋甜點）', cat: 'FOOD', subTag: '甜點冰品', defaultSel: false, drive: '機車約 6分', price: '฿90-200/人', desc: '通沙拉與班泰周邊超人氣手工義式冰淇淋 (Gelato)，消暑必吃。', query: 'Sweet Shell Gelato Koh Phangan' },
+                    // 🎉 娛樂 (ENT)
+                    { id: 'sw_3', name: 'Walking Street 通沙拉週六步行街市集', cat: 'ENT', subTag: '週六限定市集', defaultSel: false, drive: '機車約 5-10分', price: '฿100-250/人', desc: '每週六傍晚封街開市（11/21 抵達當晚剛好遇到），逛街尋寶、街頭藝人表演與手作紀念品。', query: 'Thong Sala Saturday Walking Street Koh Phangan' },
+                    { id: 'sw_8', name: 'Infinity Beach Club 無邊際泳池俱樂部', cat: 'ENT', subTag: '海灘泳池派對', defaultSel: false, drive: '機車約 5-15分', price: '฿300-1,000/人', desc: 'Baan Tai 海景無邊際泳池、海灘躺椅、DJ 音樂與夕陽派對。', query: 'Infinity Beach Club Koh Phangan' },
+                    { id: 'sw_9', name: 'Baan Tai Massage 班泰按摩街區', cat: 'ENT', subTag: '泰式精油按摩', defaultSel: false, drive: '班泰區內 3-8分', price: '฿300-700/時', desc: '提供傳統泰式按摩、腳底按摩與蘆薈精油舒壓，騎車累了隨時可按。', query: 'Baan Tai Massage Koh Phangan' },
+                    { id: 'ex_1', name: 'Phaeng Waterfall 帕安瀑布 & Domsila 觀景台', cat: 'ENT', subTag: '森林瀑布健行', defaultSel: true, drive: '機車約 15-20分', price: '依國家公園公告', desc: '島中央最大國家公園雨林健行、瀑布戲水與登高觀景台（雨後請注意路滑）。', query: 'Phaeng Noi Waterfall Koh Phangan' },
+                    { id: 'ex_4', name: 'Half Moon Festival / Jungle Experience 叢林派對', cat: 'ENT', subTag: '叢林電音派對', defaultSel: false, drive: '機車約 10-20分', price: '依官方票種', desc: 'Baan Tai 叢林內的知名大型電音視覺藝術派對（出發前請確認當週主辦場次）。', query: 'Half Moon Festival Koh Phangan' },
+                    { id: 'ex_5', name: 'Rasta Home 雷鬼音樂酒吧', cat: 'ENT', subTag: '雷鬼音樂小酌', defaultSel: false, drive: '機車約 10-15分', price: '฿150-400/人', desc: 'Reggae 現場音樂與悠閒酒吧氛圍，適合不想跑大型電音派對的人。', query: 'Rasta Home Koh Phangan' },
+                    { id: 'ex_10', name: 'Muay Thai 泰拳運動體驗課程', cat: 'ENT', subTag: '泰拳文化體驗', defaultSel: false, drive: '班泰周邊訓練館', price: '約 ฿300-600/堂', desc: '體驗道地泰國國技文化與爆汗拳擊體能訓練，新手也可參加單堂體驗。', query: 'Muay Thai Gym Koh Phangan' }
+                ]
+            },
+            {
+                key: 'SE',
+                num: 2,
+                badgeBg: 'bg-teal-600',
+                borderActive: 'border-teal-500',
+                title: 'Haad Rin（哈林海灘・島東南端滿月派對區）',
+                desc: '11/24 Full Moon Party 滿月派對主場地、白天細白沙灘戲水、海上鞦韆秘境與派對前美食補給。',
+                driveBase: '距離住宿約 15–25 分鐘',
+                hubNavQuery: 'Haad Rin Beach Koh Phangan',
+                items: [
+                    // 🍽️ 美食 (FOOD)
+                    { id: 'se_5', name: 'Mama Schnitzel（大份量維也納炸豬排＆漢堡）', cat: 'FOOD', subTag: '派對墊胃美食', defaultSel: false, drive: '機車約 20分', price: '฿220-400/人', desc: '滿月派對狂歡前必吃！比臉還大的現炸酥脆維也納炸豬排、手作漢堡與薯條，營業至深夜。', query: 'Mama Schnitzel Haad Rin Koh Phangan' },
+                    { id: 'se_6', name: 'Pizza Lab / Monna Lisa（哈林手工窯烤披薩）', cat: 'FOOD', subTag: '義式披薩餐廳', defaultSel: false, drive: '機車約 20分', price: '฿250-450/人', desc: '哈林區高評價正宗義大利手工薄皮窯烤披薩與義大利麵。', query: 'Monna Lisa Pizza Haad Rin Koh Phangan' },
+                    { id: 'se_8', name: 'Le Burger Shack（深夜多汁手作漢堡）', cat: 'FOOD', subTag: '深夜美式漢堡', defaultSel: false, drive: '機車約 20分', price: '฿200-380/人', desc: '哈林街區人氣手作牛肉漢堡與起司薯條，派對前後補充熱量首選。', query: 'Haad Rin Burger Koh Phangan' },
+                    // 🎉 娛樂 (ENT)
+                    { id: 'se_1', name: 'Haad Rin Nok 滿月派對主海灘 (Full Moon Party)', cat: 'ENT', subTag: '11/24滿月派對', defaultSel: true, drive: '機車 15-25分 (派對夜搭車)', price: '派對門票 ฿200 (平時免費)', desc: '旅行主題重點！白天細白沙灘戲水；2026/11/24(二) 晚上化身萬人海灘電音、螢光彩繪與火舞派對主場地。', query: 'Haad Rin Nok Beach Koh Phangan' },
+                    { id: 'se_4', name: 'Haad Leela (Leela Beach 海上鞦韆秘境白沙灘)', cat: 'ENT', subTag: '秘境白沙灘', defaultSel: false, drive: '從哈林街區步行 10分', price: '免費', desc: '從熱鬧的哈林街區步行 10 分鐘即達的寧靜細白沙灘，擁有超好拍的海上木棧道與水上鞦韆！', query: 'Leela Beach Haad Seekantang Koh Phangan' },
+                    { id: 'se_7', name: 'Sand & Tan Beach Bar（沙灘夕陽調酒＆火舞）', cat: 'ENT', subTag: '海灘火舞酒吧', defaultSel: false, drive: '機車約 20分', price: '฿200-500/人', desc: '直接坐在 Haad Rin 沙灘懶骨頭上喝熱帶調酒、看夕陽與夜晚火舞表演。', query: 'Sand and Tan Haad Rin Koh Phangan' },
+                    { id: 'se_3', name: 'Haad Yuan / Haad Tien 秘境海灣 & Eden Party', cat: 'ENT', subTag: '長尾船秘境/派對', defaultSel: false, drive: '至 Haad Rin 轉搭長尾船', price: '依船班與活動為準', desc: '東南岸遠離塵囂的秘境海灣，從哈林搭長尾船前往；亦為 Eden Garden 岩石派對與 The Sanctuary 所在地。', query: 'Haad Yuan Beach Koh Phangan' },
+                    { id: 'se_2', name: 'Haad Rin Divers 潛水中心', cat: 'ENT', subTag: '體驗船潛・浮潛', defaultSel: false, drive: '機車約 15-25分', price: '船潛 ฿4,100-4,300 / 浮潛 ฿1,200-1,500', desc: '位於哈林街區的潛水中心，提供出海船潛與浮潛行程。', query: 'Haad Rin Divers Koh Phangan' }
+                ]
+            },
+            {
+                key: 'W',
+                num: 3,
+                badgeBg: 'bg-amber-600',
+                borderActive: 'border-amber-500',
+                title: 'Srithanu / Wok Tum（西岸夕陽與身心靈瑜伽區）',
+                desc: 'Amsterdam Bar 傳奇懸崖落日酒吧、Zen Beach 夕陽鼓圈、退潮天空之鏡沙洲、瑜伽療癒與人氣泰北麵。',
+                driveBase: '距離住宿約 15–30 分鐘',
+                hubNavQuery: 'Zen Beach Srithanu Koh Phangan',
+                items: [
+                    // 🍽️ 美食 (FOOD)
+                    { id: 'w_9', name: 'At Chiang Mai（西岸第一泰北咖哩雞腿麵）', cat: 'FOOD', subTag: '必吃泰北金麵', defaultSel: false, drive: '機車約 18分', price: '฿100-180/人', desc: '西岸人氣第一的 Khao Soi (泰北咖哩雞腿麵)，湯頭濃郁微辣、雞腿軟嫩入味，CP值極高！', query: 'At Chiang Mai Koh Phangan' },
+                    { id: 'w_10', name: 'Eat.Co（Srithanu 網美早午餐＆果昔碗）', cat: 'FOOD', subTag: '網美早午餐', defaultSel: false, drive: '機車約 22分', price: '฿220-400/人', desc: 'Srithanu 最火紅的健康早午餐咖啡廳，超澎湃果昔碗、酪梨吐司與無麩質甜點顏值與美味兼具。', query: 'Eat Co Srithanu Koh Phangan' },
+                    { id: 'w_4', name: 'Srithanu Kitchen 斯里塔努平價泰菜', cat: 'FOOD', subTag: '平價泰式料理', defaultSel: false, drive: '機車約 20-30分', price: '฿120-250/人', desc: '推薦黃咖哩、冬蔭功湯、泰式炒麵，在西岸也能平價吃飽。', query: 'Srithanu Kitchen Koh Phangan' },
+                    { id: 'w_5', name: "L'Alcove 西岸法式海景餐廳", cat: 'FOOD', subTag: '浪漫法式晚餐', defaultSel: false, drive: '機車約 15-25分', price: '฿500-1,000/人', desc: 'Hin Kong 海灘旁的浪漫法式料理、精選葡萄酒與精緻甜點，適合約會晚餐。', query: 'LAlcove Koh Phangan' },
+                    { id: 'w_11', name: 'Alfa Coffee Roaster 手沖咖啡館', cat: 'FOOD', subTag: '自家烘焙咖啡', defaultSel: false, drive: '機車約 20分', price: '฿100-250/人', desc: '供應專業手沖咖啡、冰拿鐵與肉桂捲甜點。', query: 'Alfa Coffee Roaster Koh Phangan' },
+                    // 🎉 娛樂 (ENT)
+                    { id: 'w_1', name: 'Amsterdam Bar（Wok Tum 傳奇懸崖落日酒吧）', cat: 'ENT', subTag: '懸崖夕陽酒吧', defaultSel: true, drive: '機車約 15-25分', price: '฿150-400/人', desc: 'Wok Tum 山坡上的傳奇夕陽泳池酒吧，居高臨下眺望西岸大海與絕美海上落日。', query: 'Amsterdam Bar Koh Phangan' },
+                    { id: 'w_2', name: 'Srithanu / Zen Beach 西岸夕陽鼓圈沙灘', cat: 'ENT', subTag: '日落沙灘聚會', defaultSel: false, drive: '機車約 20-30分', price: '免費', desc: '匯集瑜伽旅人與嬉皮文化的放鬆沙灘，傍晚散步看日落、聽即興鼓圈與吉他聚會超有氛圍。', query: 'Zen Beach Koh Phangan' },
+                    { id: 'w_8', name: 'Hin Kong 退潮天空之鏡沙洲 & The Shell Lounge', cat: 'ENT', subTag: '沙洲拍照・海景酒吧', defaultSel: false, drive: '機車約 15分', price: '฿150-350/人', desc: '退潮時浮現絕美天空之鏡蜿蜒沙洲！旁有 The Shell Lounge 海景竹編懶骨頭酒吧看夕陽。', query: 'The Shell Lounge Koh Phangan' },
+                    { id: 'w_3', name: 'Bluerama 山頂無邊際泳池酒吧', cat: 'ENT', subTag: '無邊際泳池酒吧', defaultSel: false, drive: '機車約 20-30分', price: '฿300-800/人', desc: '成人限定山景無邊際泳池搭配 DJ 音樂與調酒，視野極佳。', query: 'Bluerama Koh Phangan' },
+                    { id: 'w_6', name: 'Orion Healing Center 海邊瑜伽冥想中心', cat: 'ENT', subTag: '瑜伽・冥想療癒', defaultSel: false, drive: '機車約 20-30分', price: '฿300-600/堂', desc: '提供每日瑜伽、冥想、呼吸練習與海邊竹棚伸展課程。', query: 'Orion Healing Center Koh Phangan' },
+                    { id: 'w_7', name: 'Wonderland Healing Center / The Yoga Garden', cat: 'ENT', subTag: '頌缽・身心靈瑜伽', defaultSel: false, drive: '機車約 15-25分', price: '฿300-500/堂', desc: '森林與花園中的身心靈療癒中心，提供頌缽聲音療癒、冥想與多元瑜伽伸展課程。', query: 'Wonderland Healing Center Koh Phangan' }
+                ]
+            },
+            {
+                key: 'NW',
+                num: 4,
+                badgeBg: 'bg-blue-600',
+                borderActive: 'border-blue-500',
+                title: 'Haad Yao / Mae Haad / Ko Ma（西北岸連島沙洲與長沙灘）',
+                desc: 'Ko Ma 退潮連島白沙洲與免費岸邊浮潛、Koh Raham 海邊木造平台海上吊床、Secret Beach 與平價泰菜。',
+                driveBase: '距離住宿約 25–40 分鐘',
+                hubNavQuery: 'Koh Ma Mae Haad Beach Koh Phangan',
+                items: [
+                    // 🍽️ 美食 (FOOD)
+                    { id: 'nw_4', name: 'Pura Vida Café 早午餐 (Haad Yao 店)', cat: 'FOOD', subTag: '人氣早午餐', defaultSel: false, drive: '機車約 25-35分', price: '฿200-400/人', desc: '供應酪梨吐司、果昔碗、豐盛歐式早午餐盤與道地葡式料理。', query: 'Pura Vida Cafe Haad Yao Koh Phangan' },
+                    { id: 'nw_7', name: 'LEO Thai Food（高CP值道地泰式熱炒）', cat: 'FOOD', subTag: '平價道地泰菜', defaultSel: false, drive: '機車約 25分', price: '฿80-180/人', desc: 'Haad Yao 超高評價的平價泰式熱炒！冬蔭功湯、泰式炒河粉與芒果糯米飯便宜又好吃。', query: 'LEO Thai Food Koh Phangan' },
+                    { id: 'nw_8', name: 'Loccos Pizza Bar / What’s Cup 海景咖啡', cat: 'FOOD', subTag: '海灘披薩・懸崖咖啡', defaultSel: false, drive: '機車約 25分', price: '฿180-450/人', desc: '位於 Haad Yao 沙灘旁的人氣窯烤披薩與海景懸崖咖啡廳，傍晚看海氣氛滿分。', query: 'Loccos Pizza Bar Haad Yao Koh Phangan' },
+                    // 🎉 娛樂 (ENT)
+                    { id: 'nw_1', name: 'Ko Ma 連島沙洲 & Mae Haad 岸邊浮潛', cat: 'ENT', subTag: '連島沙洲・岸邊浮潛', defaultSel: true, drive: '機車約 30-40分', price: '免費 (租面鏡約฿150)', desc: '帕岸島最具代表性的退潮連島白沙洲景觀，不用搭船即可直接從岸邊下水浮潛看熱帶魚與珊瑚。', query: 'Koh Ma Mae Haad Beach Koh Phangan' },
+                    { id: 'nw_2', name: 'Koh Raham（Haad Son 海邊木造平台網美吊床酒吧）', cat: 'ENT', subTag: '海上吊床打卡・小酌', defaultSel: true, drive: '機車約 20-30分', price: '฿200-500/人', desc: '沿著海邊礁石打造的熱帶木造平台、海上網床與鞦韆，拍照打卡、浮潛與看夕陽首選。', query: 'Koh Raham Koh Phangan' },
+                    { id: 'nw_6', name: 'Secret Beach (Haad Son 隱密碧綠小海灣)', cat: 'ENT', subTag: '秘境海灣游泳', defaultSel: false, drive: '機車約 25分', price: '免費', desc: '緊鄰 Koh Raham 入口的隱密碧綠小海灣，沙質細軟、風浪平靜，適合游泳曬太陽。', query: 'Secret Beach Haad Son Koh Phangan' },
+                    { id: 'nw_3', name: 'Haad Yao / Haad Salad 西北岸雙海灘', cat: 'ENT', subTag: '長白沙灘戲水', defaultSel: false, drive: '機車約 25-40分', price: '免費', desc: '綿延的細白長沙灘與平靜清澈海灣，適合散步、游泳與海灘放鬆。', query: 'Haad Yao Beach Koh Phangan' },
+                    { id: 'nw_5', name: 'Three Sixty Bar 360度高地景觀酒吧', cat: 'ENT', subTag: '全景俯瞰日落', defaultSel: false, drive: '機車約 25-40分', price: '฿200-500/人', desc: '西北岸高地 360 度景觀視野，可同時俯瞰 Ko Ma 沙洲與夕陽入海。', query: 'Three Sixty Bar Koh Phangan' }
+                ]
+            },
+            {
+                key: 'NE',
+                num: 5,
+                badgeBg: 'bg-purple-600',
+                borderActive: 'border-purple-500',
+                title: 'Chaloklum / Bottle Beach / Thong Nai Pan（北岸漁村與東北岸秘境）',
+                desc: 'Bottle Beach 瓶子沙灘與懸崖觀景台、Thong Nai Pan Noi 精品白沙灣、北岸漁村海鮮與森林瀑布。',
+                driveBase: '距離住宿約 25–55 分鐘',
+                hubNavQuery: 'Bottle Beach Koh Phangan',
+                items: [
+                    // 🍽️ 美食 (FOOD)
+                    { id: 'ne_4', name: 'Chaloklum 北岸漁村海鮮市集', cat: 'FOOD', subTag: '漁港海鮮燒烤', defaultSel: false, drive: '機車約 25-35分', price: '฿100-250/人', desc: '北岸傳統漁港市集，有現烤海鮮燒烤與傳統小吃攤販，可與 Bottle Beach 長尾船行程搭配。', query: 'Chaloklum Pier Market Koh Phangan' },
+                    { id: 'ne_9', name: 'J Sai Padthai（北岸碼頭旁必吃 ฿80 泰式炒河粉）', cat: 'FOOD', subTag: '人氣泰式炒河粉', defaultSel: false, drive: '機車約 30分', price: '฿70-150/人', desc: '在 Chaloklum 搭長尾船去瓶子沙灘前後必吃！฿80 鍋氣十足的現炒泰式河粉與打拋豬。', query: 'J Sai Padthai Chaloklum Koh Phangan' },
+                    { id: 'ne_10', name: "The World's End Café / Mountain Cafe 叢林咖啡", cat: 'FOOD', subTag: '海景貝果・山景咖啡', defaultSel: false, drive: '機車約 30分', price: '฿150-300/人', desc: '北岸長尾船碼頭旁的海景貝果早午餐，以及往東岸山路上的叢林白屋手沖咖啡館。', query: 'The Worlds End Cafe Chaloklum Koh Phangan' },
+                    { id: 'ne_11', name: 'Buri Rasa Beach Bar（東北岸白沙灘海景燒烤餐廳）', cat: 'FOOD', subTag: '沙灘海景餐廳', defaultSel: false, drive: '機車約 45分', price: '฿350-800/人', desc: '位於 Thong Nai Pan Noi 細白沙灘上的精品度假風海景餐廳與海鮮燒烤。', query: 'Buri Rasa Koh Phangan Beach Club' },
+                    // 🎉 娛樂 (ENT)
+                    { id: 'ne_1', name: 'Bottle Beach 瓶子沙灘 (Haad Khuat)', cat: 'ENT', subTag: '長尾船秘境海灘', defaultSel: true, drive: '至 Chaloklum 30分 + 搭船 15分', price: '長尾船來回約 ฿300/人', desc: '山林環繞的絕美隱密海灣，建議騎車至北岸 Chaloklum 搭長尾船前往（不建議騎越野土路）。', query: 'Bottle Beach Koh Phangan' },
+                    { id: 'ne_2', name: 'Bottle Beach Viewpoint 瓶子沙灘懸崖岩石觀景台', cat: 'ENT', subTag: '秘境登高觀景', defaultSel: true, drive: '機車至步道口 35分 + 健行', price: '免費', desc: '登上懸崖巨石俯瞰整個瓶子沙灘碧綠海灣；需健行且部分岩石無護欄，限晴天前往。', query: 'Bottle Beach Viewpoint Koh Phangan' },
+                    { id: 'ne_3', name: 'Thong Nai Pan Noi 東北岸精品白沙灘', cat: 'ENT', subTag: '寧靜白沙海灣', defaultSel: true, drive: '機車約 40-55分', price: '免費', desc: '東北岸精品度假村聚集的新月形白沙與寧靜海灣，非常適合悠閒度假放空。', query: 'Thong Nai Pan Noi Beach Koh Phangan' },
+                    { id: 'ne_5', name: 'Paradise Waterfall 北岸森林瀑布 & Khao Ra 登山', cat: 'ENT', subTag: '森林瀑布・山頂健行', defaultSel: false, drive: '機車約 25-35分', price: '依現場公告', desc: '位於 Chaloklum 附近的清涼森林小瀑布，體力充沛者亦可挑戰全島最高峰 Khao Ra 健行。', query: 'Paradise Waterfall Koh Phangan' },
+                    { id: 'ne_6', name: 'Than Sadet Waterfall 東岸皇家溪流瀑布', cat: 'ENT', subTag: '巨石溪流瀑布', defaultSel: false, drive: '機車約 35-50分', price: '國家公園門票另計', desc: '巨石溪流與茂密森林景色（提醒：此處並非安通國家海洋公園搭船點）。', query: 'Than Sadet Waterfall Koh Phangan' },
+                    { id: 'ne_7', name: '420 Club Phangan 山頂海景日落酒吧', cat: 'ENT', subTag: '山頂景觀酒吧', defaultSel: false, drive: '機車約 20-35分', price: '฿150-400/人', desc: '北岸山頂遼闊海景、日落與網美拍照點（留意上山道路較陡）。', query: '420 Club Phangan' },
+                    { id: 'ne_8', name: 'Sail Rock 出海船潛 & Chaloklum Diving', cat: 'ENT', subTag: '潛水聖地船潛', defaultSel: false, drive: '北岸車程 30-40分 + 出海', price: '體驗船潛約 ฿4,200 / 浮潛 ฿1,300', desc: '暹羅灣第一名潛點 Sail Rock 巨岩魚群風暴，可由北岸潛店搭船出海。', query: 'Chaloklum Diving Koh Phangan' }
+                ]
+            }
+        ];
+
+        // 11/20 Khao San Supplemental Shops (Selectable as 🎉 娛樂 + 📍 導航)
+        const KS_SHOPS_DATA = [
+            { id: 'ks_1', name: 'Bangkok Stoner（考山路二樓沙發舒適型店家）', cat: 'ENT', subTag: '考山路休閒店家', defaultSel: false, drive: '251 Khaosan Rd', price: '約 540 THB/g 起', desc: '二樓設有舒適沙發內用區、英文可溝通、品項與效果標示清楚，適合報到前想找舒適空間休息的人。', query: 'Bangkok Stoner 251 Khaosan Rd Bangkok' },
+            { id: 'ks_2', name: 'Plantopia - Weed City（考山路半開放市集多攤位區）', cat: 'ENT', subTag: '考山路多攤位比價', defaultSel: false, drive: '265 Khaosan Rd', price: '依攤位現場比價', desc: '空間像半開放市集、多攤位集中可一次比價，附設公共座位與吸煙區，適合邊逛邊比較。', query: 'Plantopia Weed City 265 Khaosan Rd Bangkok' }
+        ];
+
+        // 11/27 Bangkok Return: 4 Categories of Rest/Accommodation (Selectable + 📍 導航)
+        const BKK_REST_OPTIONS = [
+            { id: 'rest_h1', cat: 'HOTEL', mainCat: 'ENT', subTag: '🏨 機場周邊飯店 (24H免費接駁)', name: 'Siam Mandarina Hotel (暹羅文華飯店)', price: '約 ฿2,200 起/房', drive: '距 BKK 15-20分 (2樓 Gate 5 集合)', desc: '有大床與淋浴間，配 24H 免費機場接駁，凌晨 02:30 抵達能立刻洗熱水澡睡飽 6-7 小時，預算與舒適最平衡！', query: 'Siam Mandarina Hotel Suvarnabhumi Airport' },
+            { id: 'rest_h2', cat: 'HOTEL', mainCat: 'ENT', subTag: '🏨 機場周邊飯店 (定時免費接駁)', name: 'The Park Nine Hotel Suvarnabhumi', price: '依 11/26 房價為準', drive: '位於 Lat Krabang (每小時半點接駁)', desc: '高質感現代化河畔飯店，於 BKK 2樓 Gate 5 集合搭車（須先預約座位），適合希望住得寬敞舒適的旅客。', query: 'The Park Nine Hotel Suvarnabhumi' },
+            { id: 'rest_h3', cat: 'HOTEL', mainCat: 'ENT', subTag: '🏨 機場連通飯店 (地下道直達)', name: 'Hyatt Regency Bangkok Suvarnabhumi Airport', price: '單價較高 (彈性24H入住)', drive: 'B1 地下連通道步行即達', desc: '完全不用搭車出機場園區！標榜彈性 24 小時制入住，最適合不想再奔波轉車的旅客。', query: 'Hyatt Regency Bangkok Suvarnabhumi Airport' },
+            { id: 'rest_p1', cat: 'POD', mainCat: 'ENT', subTag: '🛌 B1 機場睡眠艙 (免出機場)', name: 'Boxtel @ Suvarnabhumi Airport (B1 機捷層)', price: '約 ฿1,200 - 1,400 / 4小時', drive: 'BKK 地下 B1 (管制區外 Landside)', desc: '私人獨立小睡房，不用離開機場；但無房內淋浴、需使用公共廁所，適合短睡 4-5 小時。', query: 'Boxtel Suvarnabhumi Airport' },
+            { id: 'rest_p2', cat: 'POD', mainCat: 'ENT', subTag: '🛌 B1 機場膠囊旅館 (免出機場)', name: 'Avagard Capsule Hotel (B1 機捷層)', price: '約 ฿1,500 / 4小時', drive: 'BKK 地下 B1 (管制區外 Landside)', desc: '科技感膠囊床位，附插座與行李櫃，使用公共衛浴；若睡超過 7 小時，周邊飯店或青旅更划算。', query: 'Avagard Capsule Hotel Suvarnabhumi Airport' },
+            { id: 'rest_ho1', cat: 'HOSTEL', mainCat: 'ENT', subTag: '🎒 機場周邊青年旅館', name: 'Saen Sabai Hostel (萊卡邦高評價平價青旅)', price: '床位約 ฿350 - 650/晚', drive: '距 BKK 機場車程約 10-15分', desc: '小資背包客救星！只要睡眠艙 1/3 價格就能洗熱水澡、躺床補眠，深夜入住請事先聯繫櫃檯。', query: 'Saen Sabai Hostel Lat Krabang Bangkok' },
+            { id: 'rest_ho2', cat: 'HOSTEL', mainCat: 'ENT', subTag: '🎒 機場周邊平價旅店', name: 'Gate43 Airport Hotel (24H櫃檯平價旅店)', price: '約 ฿500 - 850 / 晚', drive: '距 BKK 機場車程約 10-15分', desc: '機場周邊高性價比平價旅店與青旅，有 24H 櫃檯接待，花小錢就能擁有乾淨淋浴與安靜睡眠。', query: 'Gate43 Airport Hotel Bangkok' },
+            { id: 'rest_ho3', cat: 'HOSTEL', mainCat: 'ENT', subTag: '🎒 考山路人氣泳池青旅', name: 'Bed Station Hostel Khaosan (考山路設計感青旅)', price: '床位約 ฿450 - 750/晚', drive: '考山路區 (Boonsiri 下車步行即達)', desc: '若 11/27 凌晨夜車在考山路下車不想轉車去機場，可直接入住考山路旁 24H 前台的高評價工業風泳池青旅！', query: 'Bed Station Hostel Khaosan Bangkok' },
+            { id: 'rest_ho4', cat: 'HOSTEL', mainCat: 'ENT', subTag: '🎒 暹羅市中心潮牌青旅', name: 'Lub d Bangkok Siam (BTS National Stadium 旁)', price: '床位約 ฿500 - 850/晚', drive: '曼谷市中心 Siam 區 (24H櫃檯)', desc: '曼谷最知名的連鎖設計青旅，24 小時前台接待，方便凌晨入住後隔天在市中心逛街再回機場。', query: 'Lub d Bangkok Siam' },
+            { id: 'rest_t1', cat: 'TEMP', mainCat: 'ENT', subTag: '💆‍♀️ 匯狂夜市 24H 按摩街過夜', name: '匯狂夜市 24H 泰式按摩街 (฿500-900 按摩直接睡到天亮)', price: '按摩過夜約 ฿500 - 900', drive: '匯狂站 (距機場深夜車程約 25分)', desc: '免訂房臨時休息首選！去匯狂 24H 按摩店連按 2-3 小時足部＋精油按摩，直接睡在冷氣包廂到早上。', query: 'Huai Khwang 24 Hours Massage Bangkok' },
+            { id: 'rest_t2', cat: 'TEMP', mainCat: 'ENT', subTag: '💆‍♀️ 日式湯屋泡湯＆懶骨頭補眠', name: '湯之森 Yunomori Onsen & Spa Sukhumvit 26', price: '泡湯套票約 ฿550 - 1,000', drive: '素坤逸 26 巷 (09:00 起營業)', desc: '結合日本天然溫泉湯屋、泰式按摩與超舒服的懶骨頭睡眠休息區，適合洗去長途夜車疲勞。', query: 'Yunomori Onsen and Spa Sukhumvit 26 Bangkok' },
+            { id: 'rest_t3', cat: 'TEMP', mainCat: 'ENT', subTag: '💆‍♀️ 日式溫泉泡湯＆榻榻米補眠', name: "Let's Relax Onsen & Spa Thonglor (通羅日式溫泉會館)", price: '溫泉套票約 ฿750 - 1,100', drive: '通羅區 Grande Centre Point 5樓', desc: '凌晨先在通羅深夜食堂吃宵夜，早上泡正宗日式溫泉＋在超安靜冷氣榻榻米休息室補眠！', query: 'Lets Relax Onsen and Spa Thonglor Bangkok' },
+            { id: 'rest_t4', cat: 'TEMP', mainCat: 'ENT', subTag: '🧳 機場 24H 行李寄存服務', name: 'BKK 機場 B1 / 4F 24H 行李寄存處 (BELLUG / Airportels)', price: '約 ฿100 - 150 / 件', drive: 'BKK 機場地下 B1 機捷層 / 4樓出境層', desc: '凌晨抵達若想去市區夜店、匯狂夜市或直接去古蹟半日遊，可先把大件行李寄放在機場 24H 櫃檯輕裝出發！', query: 'Airportels Luggage Storage Suvarnabhumi Airport' }
+        ];
+
+        // 11/27 Bangkok Return: Nightlife & Late-night Food (All with 📍 導航)
+        const BKK_SPOTS_DATA = [
+            { id: 'bkk_n1', name: 'NARZ Club Bangkok (素坤逸23巷營業到天亮續攤夜店)', cat: 'ENT', nightType: 'CLUB', subTag: '營業至清晨 05:00-06:00', drive: '距 BKK 深夜車程約 25分', price: '門票約 ฿400-600', desc: '凌晨 02:00 抵達曼谷還想狂歡？NARZ 是曼谷少數營業到清晨五、六點的指標性多廳續攤夜店！', query: 'NARZ Club Bangkok Sukhumvit 23' },
+            { id: 'bkk_n2', name: 'Spaceplus / ONYX RCA (曼谷百大DJ頂級電音夜店)', cat: 'ENT', nightType: 'CLUB', subTag: '大型電音派對', drive: '距 BKK 深夜車程約 20-25分', price: '門票約 ฿500-800', desc: 'RCA 夜店區最震撼的百大 DJ 電音舞台與雷射聲光效果，派對動物必訪。', query: 'Spaceplus Bangkok RCA' },
+            { id: 'bkk_n3', name: 'MUIN Bangkok / Baccarat Thonglor (通羅潮人夜店)', cat: 'ENT', nightType: 'CLUB', subTag: '通羅最潮夜生活', drive: '距 BKK 深夜車程約 25分', price: '฿500-1,000/人', desc: '曼谷帥哥美女與潮流人士最密集的通羅 (Thonglor) 頂級夜店與復古迪斯可俱樂部。', query: 'MUIN Bangkok Thonglor' },
+            { id: 'bkk_n4', name: 'Sukhumvit Soi 11 徹夜派對街 (Sugar Club / Levels)', cat: 'ENT', nightType: 'CLUB', subTag: '整條街營業至深夜', drive: '距 BKK 深夜車程約 25分', price: '฿350-800/人', desc: '外國旅客最密集的曼谷不夜城！一整條街匯集嘻哈夜店 Sugar Club、Levels 與街邊酒吧。', query: 'Sukhumvit Soi 11 Nightlife Bangkok' },
+            { id: 'bkk_f2', name: 'Ebisu Shoten 惠比壽商店居酒屋 (通羅深夜食堂)', cat: 'FOOD', nightType: 'BAR', subTag: '營業至凌晨 04:00-05:00', drive: '距 BKK 深夜車程約 25分', price: '฿250-500/人', desc: '充滿日本昭和屋台氛圍的深夜食堂！現烤炭火串燒、豚骨拉麵、生魚片配冰涼生啤酒。', query: 'Ebisu Shoten Thonglor Bangkok' },
+            { id: 'bkk_f3', name: 'Dry Wave Cocktail Studio / Bar Us (亞洲50大冠軍調酒吧)', cat: 'FOOD', nightType: 'BAR', subTag: '頂級創意雞尾酒', drive: '距 BKK 深夜車程約 25分', price: '฿400-800/人', desc: '曼谷最新獲獎無數的亞洲 50 大指標性調酒吧，適合喜歡高質感微醺夜生活的旅人。', query: 'Dry Wave Cocktail Studio Thonglor Bangkok' },
+            { id: 'bkk_f1', name: '匯狂夜市 (Huai Khwang) 象神參拜＆深夜海鮮熱炒豬腳飯', cat: 'FOOD', nightType: 'MARKET', subTag: '營業至清晨 04:30', drive: '距 BKK 深夜車程約 25分', price: '฿150-350/人', desc: '凌晨 02:30 抵達正熱鬧！參拜越夜越靈驗的匯狂象神後，大啖現烤大頭蝦、泰式海鮮熱炒與傳奇豬腳飯。', query: 'Huai Khwang Night Market Bangkok' }
+        ];
+
+        // 11/27 Daytime Cultural Landmarks (4 Major Landmarks near BKK Airport)
+        const BKK_LANDMARKS_DATA = [
+            { id: 'bkk_c1', name: '三頭象神博物館 (Erawan Museum)', cat: 'ENT', subTag: '11/27白天名勝｜門票約฿500', drive: '距 BKK 車程約 35-60分', price: '門票約 ฿500', desc: '巨型粉紅三頭象與極致華麗的彩繪玻璃宗教藝術殿堂，拍照最出片（方案A首選）。', query: 'The Erawan Museum Samut Prakan' },
+            { id: 'bkk_c2', name: '暹羅古城 (Ancient City / Muang Boran)', cat: 'ENT', subTag: '11/27白天名勝｜門票約฿800', drive: '距 BKK 車程約 45-75分', price: '門票約 ฿800', desc: '世界最大戶外博物館，可租高爾夫球車一次飽覽泰國各地經典寺廟、水上市場與宮殿建築群（方案B）。', query: 'The Ancient City Samut Prakan' },
+            { id: 'bkk_c3', name: '邦披大臥佛寺 (Wat Bang Phli Yai Klang)', cat: 'ENT', subTag: '11/27白天名勝｜一般免費', drive: '距 BKK 車程約 20-40分', price: '一般免費', desc: '長達 53 公尺的巨型室內金色臥佛（佛身內部可進入參拜）與傳統百年水上古市集（方案A/C）。', query: 'Wat Bang Phli Yai Klang' },
+            { id: 'bkk_c4', name: '金碧寺 (Wat King Kaew 機場近郊古寺)', cat: 'ENT', subTag: '11/27白天名勝｜一般免費', drive: '距 BKK 車程僅 15-25分', price: '一般免費', desc: '距離 BKK 機場最近的寧靜傳統佛寺，車程最短、最不怕塞車（方案C最省力首選）。', query: 'Wat King Kaew Samut Prakan' }
+        ];
+
+        // 11/27 Cultural Tour Schedules (Every step has a navigation query!)
+        const BKK_TOURS_DATA = {
+            A: {
+                code: 'A', badge: '首選方案 A｜建築拍照＋寺院文化', title: '方案 A：三頭象神博物館 ＋ 邦披大臥佛寺', budget: '฿1,400 - 2,300 / 人',
+                tip: '彈性提醒：若睡眠不足，可刪去第二站，只參觀三頭象神博物館。',
+                schedule: [
+                    { time: '02:00 - 09:00', task: '機場周邊飯店 / 青旅補眠、整理行李', navName: 'Siam Mandarina 飯店', query: 'Siam Mandarina Hotel Suvarnabhumi Airport' },
+                    { time: '09:00 - 11:30', task: '出發並參觀 Erawan Museum 三頭象神博物館', navName: '三頭象神博物館', query: 'The Erawan Museum Samut Prakan' },
+                    { time: '11:30 - 13:00', task: '移動並參觀 Wat Bang Phli Yai Klang 邦披大臥佛寺', navName: '邦披大臥佛寺', query: 'Wat Bang Phli Yai Klang' },
+                    { time: '13:00 - 14:15', task: '返回 BKK 蘇凡納布機場（保留 45 分鐘緩衝）', navName: 'BKK 機場', query: 'Suvarnabhumi Airport Bangkok' }
+                ]
+            },
+            B: {
+                code: 'B', badge: '方案 B｜最適合建築愛好者', title: '方案 B：暹羅古城 (Ancient City) 半日遊', budget: '฿1,600 - 2,500 / 人',
+                tip: '彈性提醒：園區範圍廣，建議利用園區高爾夫球車代步。',
+                schedule: [
+                    { time: '02:00 - 08:30', task: '機場周邊飯店 / 青旅補眠', navName: 'Siam Mandarina 飯店', query: 'Siam Mandarina Hotel Suvarnabhumi Airport' },
+                    { time: '08:30 - 12:30', task: '搭車前往並參觀暹羅古城重點宮殿及水上建築群', navName: '暹羅古城', query: 'The Ancient City Samut Prakan' },
+                    { time: '12:30 - 15:00', task: '返回 BKK 機場並完成報到（18:35 CI840 起飛）', navName: 'BKK 機場', query: 'Suvarnabhumi Airport Bangkok' }
+                ]
+            },
+            C: {
+                code: 'C', badge: '方案 C｜最悠閒最省錢（可睡到10點）', title: '方案 C：金碧寺 ＋ 邦披大臥佛寺', budget: '฿600 - 1,200 / 人',
+                tip: '彈性提醒：若前一晚船車延誤或太累，可只保留金碧寺，降低塞車與疲勞風險。',
+                schedule: [
+                    { time: '02:00 - 10:00', task: '飯店 / 青旅睡飽到 10:00', navName: 'Siam Mandarina 飯店', query: 'Siam Mandarina Hotel Suvarnabhumi Airport' },
+                    { time: '10:00 - 11:15', task: '搭車至 Wat King Kaew 金碧寺參拜（僅 15-25 分）', navName: '金碧寺', query: 'Wat King Kaew Samut Prakan' },
+                    { time: '11:15 - 13:00', task: '搭車至邦披大臥佛寺參觀與午餐', navName: '邦披大臥佛寺', query: 'Wat Bang Phli Yai Klang' },
+                    { time: '13:00 - 14:00', task: '返回 BKK 機場，預留充足時間', navName: 'BKK 機場', query: 'Suvarnabhumi Airport Bangkok' }
+                ]
+            }
+        };
+
+        const BKK_CHECKLIST_ITEMS = [
+            { id: 'chk_1', num: '01', title: '先睡飽', desc: '11/27 02:00 才到曼谷，不預約清晨付費景點' },
+            { id: 'chk_2', num: '02', title: '飯店訂11/26', desc: '凌晨入住需訂 11/26 入住，確認深夜接待' },
+            { id: 'chk_3', num: '03', title: '只排重點', desc: '文化景點最多 1-2 個，不跨舊城塞車區' },
+            { id: 'chk_4', num: '04', title: '15:00回機場', desc: '18:35 航班前留足報到時間' },
+            { id: 'chk_5', num: '05', title: '保留備案', desc: '遇延誤或疲倦改只去金碧寺或飯店休息' }
+        ];
+
+        // 6-Day 5-Itinerary Plans Dataset (Every day has `navLinks` array for instant Google Maps navigation!)
+        const ITINERARY_PLANS = {
+            A: {
+                code: 'A', name: '經典環島玩滿版', tag: '第一次來最推薦', budget: '฿4,150 - 8,250', desc: '熱門沙洲、Bottle Beach、瀑布與海景酒吧，路線分區集中。',
+                days: [
+                    {
+                        date: '11/21 (六)', am: '抵達港口 ➔ Nice Moon Resort 入住', pm: 'Thong Sala 商圈散步、採買', night: 'Phantip Night Market 晚餐', note: '依抵達船班縮短下午行程', min: 350, max: 750,
+                        navLinks: [
+                            { label: 'Thong Sala 碼頭', q: 'Thong Sala Pier Koh Phangan' },
+                            { label: 'Nice Moon Resort', q: 'Nice Moon Resort Koh Phangan' },
+                            { label: 'Phantip 潘提夜市', q: 'Pantip Night Food Market Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/22 (日)', am: 'Mae Haad ➔ Ko Ma 連島沙洲', pm: 'Ko Ma 浮潛、Haad Salad 沙灘', night: 'Koh Raham 拍照 ➔ 西岸夕陽', note: '西北岸集中；留意退潮與海況', min: 750, max: 1450,
+                        navLinks: [
+                            { label: 'Ko Ma 連島沙洲', q: 'Koh Ma Mae Haad Beach Koh Phangan' },
+                            { label: 'Haad Salad 沙灘', q: 'Haad Salad Beach Koh Phangan' },
+                            { label: 'Koh Raham 海景酒吧', q: 'Koh Raham Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/23 (一)', am: 'Chaloklum 漁村 ➔ Bottle Beach 長尾船', pm: 'Bottle Beach 放空；視路況走觀景台', night: '返回 Baan Tai 晚餐', note: '觀景台僅限晴天且體力良好', min: 950, max: 1750,
+                        navLinks: [
+                            { label: 'Chaloklum 漁村碼頭', q: 'Chaloklum Pier Koh Phangan' },
+                            { label: 'Bottle Beach 瓶子沙灘', q: 'Bottle Beach Koh Phangan' },
+                            { label: 'Bottle Beach 觀景台', q: 'Bottle Beach Viewpoint Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/24 (二)', am: "Bubba's Coffee 早午餐", pm: 'Haad Rin 周邊踩點、下午回飯店休息', night: '🌕 Full Moon Party | Haad Rin Nok', note: '派對夜請搭共乘車，不騎車', min: 900, max: 1950,
+                        navLinks: [
+                            { label: "Bubba's Coffee Baan Tai", q: 'Bubbas Coffee Baan Tai Koh Phangan' },
+                            { label: 'Haad Rin Nok 滿月派對海灘', q: 'Haad Rin Nok Beach Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/25 (三)', am: 'Phaeng Waterfall 雨林步道', pm: 'Thong Nai Pan Noi 海灘', night: "Fisherman's Restaurant 晚餐", note: '派對後若太累可改按摩＋咖啡', min: 1000, max: 1850,
+                        navLinks: [
+                            { label: 'Phaeng 帕安瀑布', q: 'Phaeng Noi Waterfall Koh Phangan' },
+                            { label: 'Thong Nai Pan Noi 海灘', q: 'Thong Nai Pan Noi Beach Koh Phangan' },
+                            { label: "Fisherman's 海景餐廳", q: 'Fishermans Restaurant and Bar Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/26 (四)', am: '悠閒早餐、打包退房', pm: '視船班前往 Thong Sala Pier', night: '夜車返程往曼谷 BKK', note: '以正式船班為準', min: 200, max: 500,
+                        navLinks: [
+                            { label: 'Nice Moon Resort', q: 'Nice Moon Resort Koh Phangan' },
+                            { label: 'Thong Sala 碼頭', q: 'Thong Sala Pier Koh Phangan' }
+                        ]
+                    }
+                ]
+            },
+            B: {
+                code: 'B', name: '悠閒度假美食版', tag: '慢旅行・拍照', budget: '฿3,750 - 7,500', desc: '少跑山路，保留海景、精緻早午餐、按摩與完整休息時間。',
+                days: [
+                    {
+                        date: '11/21 (六)', am: '抵達、入住 Nice Moon Resort', pm: 'Baan Tai 沙灘散步', night: "Fisherman's Restaurant 海景晚餐", note: '輕鬆開啟慢活假期', min: 600, max: 1100,
+                        navLinks: [
+                            { label: 'Nice Moon Resort', q: 'Nice Moon Resort Koh Phangan' },
+                            { label: 'Baan Tai 海灘', q: 'Baan Tai Beach Koh Phangan' },
+                            { label: "Fisherman's 餐廳", q: 'Fishermans Restaurant and Bar Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/22 (日)', am: "Bubba's Coffee 慢早午餐", pm: 'Srithanu / Zen Beach、健康咖啡', night: 'Amsterdam Bar 日落', note: '西岸拍照與懸崖夕陽', min: 700, max: 1350,
+                        navLinks: [
+                            { label: "Bubba's Coffee", q: 'Bubbas Coffee Baan Tai Koh Phangan' },
+                            { label: 'Zen Beach 夕陽沙灘', q: 'Zen Beach Koh Phangan' },
+                            { label: 'Amsterdam Bar 夕陽酒吧', q: 'Amsterdam Bar Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/23 (一)', am: 'Thong Sala 在地市集', pm: '瑜伽課或泰式按摩', night: 'Phantip Night Market 夜市', note: '放鬆儲備派對體力', min: 650, max: 1250,
+                        navLinks: [
+                            { label: 'Thong Sala 市集', q: 'Thong Sala Market Koh Phangan' },
+                            { label: 'Baan Tai 按摩區', q: 'Baan Tai Massage Koh Phangan' },
+                            { label: 'Phantip 潘提夜市', q: 'Pantip Night Food Market Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/24 (二)', am: '咖啡館、自由活動', pm: '飯店休息、補眠', night: '🌕 Full Moon Party | Haad Rin Nok', note: '不要把派對日前排成趕場日', min: 850, max: 1800,
+                        navLinks: [
+                            { label: 'Dots Coffee', q: 'Dots Coffee Koh Phangan' },
+                            { label: 'Haad Rin Nok 滿月派對', q: 'Haad Rin Nok Beach Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/25 (三)', am: '下午才出門：海景早午餐', pm: 'Haad Son / Koh Raham 拍照', night: 'Sea Love Beach 餐廳小酌', note: '派對隔天自然醒', min: 750, max: 1500,
+                        navLinks: [
+                            { label: 'Koh Raham 海景木平台', q: 'Koh Raham Koh Phangan' },
+                            { label: 'Sea Love Beach 餐廳', q: 'Sea Love Beach Bar Restaurant Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/26 (四)', am: '早餐、退房', pm: '前往碼頭', night: '返程往曼谷 BKK', note: '配合實際船班', min: 200, max: 500,
+                        navLinks: [
+                            { label: 'Thong Sala 碼頭', q: 'Thong Sala Pier Koh Phangan' }
+                        ]
+                    }
+                ]
+            },
+            C: {
+                code: 'C', name: '海洋潛水冒險版', tag: '水上活動優先', budget: '฿7,750 - 12,050', desc: '保留 Sail Rock 船潛、沙洲浮潛與北岸秘境，需依風浪調整。',
+                days: [
+                    {
+                        date: '11/21 (六)', am: '抵達、入住', pm: 'Baan Tai 熟悉環境、詢問潛店', night: 'Thong Sala 夜市', note: '先確認 11/23 潛水集合時間', min: 350, max: 750,
+                        navLinks: [
+                            { label: 'Nice Moon Resort', q: 'Nice Moon Resort Koh Phangan' },
+                            { label: 'Phantip 潘提夜市', q: 'Pantip Night Food Market Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/22 (日)', am: 'Mae Haad 海灘 ➔ Ko Ma', pm: '浮潛 / 海灘休息', night: 'Chaloklum 漁村晚餐', note: '浮潛以浪小水清為前提', min: 650, max: 1350,
+                        navLinks: [
+                            { label: 'Ko Ma 連島沙洲浮潛', q: 'Koh Ma Mae Haad Beach Koh Phangan' },
+                            { label: 'Chaloklum 北岸漁村', q: 'Chaloklum Pier Market Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/23 (一)', am: '🤿 Sail Rock 體驗潛水 / 船潛', pm: '出海回程、飯店休息', night: '簡單晚餐，避免飲酒', note: '潛水資格、氣瓶數需與店家確認', min: 4750, max: 5950,
+                        navLinks: [
+                            { label: 'Chaloklum Diving 潛店', q: 'Chaloklum Diving Koh Phangan' },
+                            { label: 'Haad Rin Divers 潛店', q: 'Haad Rin Divers Koh Phangan' },
+                            { label: 'Sail Rock 帆船石潛點', q: 'Sail Rock Dive Site Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/24 (二)', am: "休息、Bubba's Coffee", pm: 'Haad Rin 白天拍照、休息', night: '🌕 Full Moon Party | Haad Rin Nok', note: '潛水排在派對前一天較合理', min: 900, max: 1800,
+                        navLinks: [
+                            { label: "Bubba's Coffee", q: 'Bubbas Coffee Baan Tai Koh Phangan' },
+                            { label: 'Haad Rin Nok 滿月派對', q: 'Haad Rin Nok Beach Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/25 (三)', am: 'Bottle Beach 長尾船秘境', pm: '沙灘放鬆 / 備選 Thong Nai Pan Noi', night: '海景餐廳', note: '若海況差改西岸陸上景點', min: 900, max: 1700,
+                        navLinks: [
+                            { label: 'Bottle Beach 瓶子沙灘', q: 'Bottle Beach Koh Phangan' },
+                            { label: 'Thong Nai Pan Noi 海灘', q: 'Thong Nai Pan Noi Beach Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/26 (四)', am: '早餐、退房', pm: '前往碼頭', night: '返程往曼谷 BKK', note: '搭機前須符合潛水後禁飛間隔', min: 200, max: 500,
+                        navLinks: [
+                            { label: 'Thong Sala 碼頭', q: 'Thong Sala Pier Koh Phangan' }
+                        ]
+                    }
+                ]
+            },
+            D: {
+                code: 'D', name: '美食酒吧夜生活版', tag: '吃喝＋派對', budget: '฿4,250 - 8,850', desc: '白天咖啡與海灘，傍晚追夕陽，晚上集中吃美食和酒吧。',
+                days: [
+                    {
+                        date: '11/21 (六)', am: '抵達、入住', pm: 'Thong Sala 商圈 / 咖啡', night: 'Phantip 夜市、街頭小吃', note: '通沙拉美食大本營', min: 450, max: 900,
+                        navLinks: [
+                            { label: 'Dots Coffee', q: 'Dots Coffee Koh Phangan' },
+                            { label: 'Phantip 潘提夜市', q: 'Pantip Night Food Market Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/22 (日)', am: "Bubba's Coffee 招牌早午餐", pm: 'Secret Beach ➔ Koh Raham', night: 'Amsterdam Bar 夕陽酒吧', note: '網美下午茶＋懸崖落日', min: 850, max: 1700,
+                        navLinks: [
+                            { label: "Bubba's Coffee", q: 'Bubbas Coffee Baan Tai Koh Phangan' },
+                            { label: 'Secret Beach 秘境海灣', q: 'Secret Beach Haad Son Koh Phangan' },
+                            { label: 'Koh Raham', q: 'Koh Raham Koh Phangan' },
+                            { label: 'Amsterdam Bar', q: 'Amsterdam Bar Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/23 (一)', am: 'Mae Haad / Ko Ma 海景', pm: 'Chaloklum 漁村海鮮', night: 'Baan Tai 海景餐廳 / 小酒吧', note: '夜間騎車請保守安排', min: 850, max: 1700,
+                        navLinks: [
+                            { label: 'Ko Ma 連島沙洲', q: 'Koh Ma Mae Haad Beach Koh Phangan' },
+                            { label: 'Chaloklum 漁村', q: 'Chaloklum Pier Market Koh Phangan' },
+                            { label: 'Ando Loco 餐酒館', q: 'Ando Loco Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/24 (二)', am: '早午餐、自由活動', pm: '回飯店休息 / 螢光彩繪準備', night: '🌕 Full Moon Party 通宵電音', note: '酒後不騎車；交通預留', min: 1000, max: 2300,
+                        navLinks: [
+                            { label: 'Hundred Islands 早午餐', q: 'Hundred Islands Coffee Bar Koh Phangan' },
+                            { label: 'Haad Rin Nok 滿月派對', q: 'Haad Rin Nok Beach Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/25 (三)', am: '睡到自然醒', pm: '泰式按摩、Zen Beach', night: "Fisherman's Restaurant 慶祝晚餐", note: '按摩舒壓與海景大餐', min: 850, max: 1700,
+                        navLinks: [
+                            { label: 'Baan Tai 按摩街', q: 'Baan Tai Massage Koh Phangan' },
+                            { label: 'Zen Beach 沙灘', q: 'Zen Beach Koh Phangan' },
+                            { label: "Fisherman's 海景餐廳", q: 'Fishermans Restaurant and Bar Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/26 (四)', am: '早餐、退房', pm: '最後採買、碼頭', night: '返程往曼谷 BKK', note: '配合實際船班', min: 250, max: 550,
+                        navLinks: [
+                            { label: "Nira's Home Bakery", q: 'Niras Home Bakery Koh Phangan' },
+                            { label: 'Thong Sala 碼頭', q: 'Thong Sala Pier Koh Phangan' }
+                        ]
+                    }
+                ]
+            },
+            E: {
+                code: 'E', name: '雨季彈性省預算版', tag: '低預算・少冒險', budget: '฿2,500 - 5,600', desc: '以容易取消或替換的陸上景點為主，船遊與山路不列為必要。',
+                days: [
+                    {
+                        date: '11/21 (六)', am: '抵達、入住', pm: 'Thong Sala 採買與散步', night: 'Phantip 平價小吃', note: '平價美食輕鬆吃', min: 250, max: 550,
+                        navLinks: [
+                            { label: 'Thong Sala 商圈', q: 'Thong Sala Pier Koh Phangan' },
+                            { label: 'Phantip 潘提夜市', q: 'Pantip Night Food Market Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/22 (日)', am: 'Phaeng Waterfall (天氣允許)', pm: 'Thong Sala 咖啡館 / 按摩', night: '平價泰式餐館', note: '豪雨改室內咖啡＋按摩', min: 450, max: 1000,
+                        navLinks: [
+                            { label: 'Phaeng 帕安瀑布', q: 'Phaeng Noi Waterfall Koh Phangan' },
+                            { label: 'Dots Coffee', q: 'Dots Coffee Koh Phangan' },
+                            { label: 'Srithanu Kitchen 平價泰菜', q: 'Srithanu Kitchen Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/23 (一)', am: 'Ko Ma 海灘 (晴天選項)', pm: 'Haad Yao / Srithanu 散步', night: 'Zen Beach 日落、夜市', note: '浪大則不浮潛，改海岸拍照', min: 450, max: 1000,
+                        navLinks: [
+                            { label: 'Ko Ma 沙洲', q: 'Koh Ma Mae Haad Beach Koh Phangan' },
+                            { label: 'Haad Yao 長沙灘', q: 'Haad Yao Beach Koh Phangan' },
+                            { label: 'Zen Beach 日落', q: 'Zen Beach Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/24 (二)', am: '晚起、平價早餐', pm: '飯店休息，傍晚前往 Haad Rin', night: '🌕 Full Moon Party | Haad Rin Nok', note: '滿月派對來回交通需預留', min: 750, max: 1600,
+                        navLinks: [
+                            { label: 'Thong Sala 本地市集', q: 'Thong Sala Market Koh Phangan' },
+                            { label: 'Haad Rin Nok 滿月派對', q: 'Haad Rin Nok Beach Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/25 (三)', am: 'Chaloklum 漁村 (天氣良好)', pm: '平價按摩 / 海景咖啡', night: 'Thong Sala 晚餐＋伴手禮', note: '不強制安排船班', min: 450, max: 1050,
+                        navLinks: [
+                            { label: 'J Sai Padthai 炒河粉', q: 'J Sai Padthai Chaloklum Koh Phangan' },
+                            { label: 'Baan Tai 按摩區', q: 'Baan Tai Massage Koh Phangan' }
+                        ]
+                    },
+                    {
+                        date: '11/26 (四)', am: '早餐、退房', pm: '前往碼頭', night: '返程往曼谷 BKK', note: '精準控制預算', min: 150, max: 400,
+                        navLinks: [
+                            { label: 'Thong Sala 碼頭', q: 'Thong Sala Pier Koh Phangan' }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        // -----------------------------------------------------------
+        // 2. STATE & STORAGE INITIALIZATION
+        // -----------------------------------------------------------
+        let openHubKeys = ['SW']; // Default open Node 1
+        let openDayIndices = [0, 1, 2, 3, 4, 5]; // Default all 6 days expanded
+        let isMapOpen = true;
+        let hubSubFilters = { SW: 'ALL', SE: 'ALL', W: 'ALL', NW: 'ALL', NE: 'ALL' };
+        let currentSpotCat = 'ALL'; // 'ALL' | 'FOOD' | 'ENT' | 'SELECTED'
+        let currentSpotZone = 'ALL'; // 'ALL' | 'SW' | 'SE' | 'W' | 'NW' | 'NE'
+        let selectedIds = []; // Array of user-selected item IDs
+        let modalCatFilter = 'ALL';
+        let itineraryMode = 'STD';
+        let currentPlanCode = 'A';
+        let customMixPlans = ['A', 'A', 'A', 'A', 'A', 'A'];
+        let currentBkkRestCat = 'ALL';
+        let currentBkkSpotCat = 'ALL';
+        let currentBkkTourCode = 'A';
+        let checkedListIds = ['chk_1', 'chk_2'];
+
+        function getAllSelectableItems() {
+            const list = [];
+            HUBS_DATA.forEach(hub => {
+                hub.items.forEach(item => {
+                    list.push({ ...item, hubKey: hub.key, zoneLabel: `節點 ${hub.num}：${hub.title.split('（')[0]}` });
+                });
+            });
+            KS_SHOPS_DATA.forEach(item => {
+                list.push({ ...item, zoneLabel: '11/20 考山路' });
+            });
+            BKK_REST_OPTIONS.forEach(item => {
+                list.push({ ...item, cat: 'ENT', zoneLabel: '11/27 曼谷過夜休息' });
+            });
+            BKK_SPOTS_DATA.forEach(item => {
+                list.push({ ...item, zoneLabel: '11/27 曼谷深夜夜生活' });
+            });
+            BKK_LANDMARKS_DATA.forEach(item => {
+                list.push({ ...item, zoneLabel: '11/27 曼谷文化名勝' });
+            });
+            return list;
+        }
+
+        // -----------------------------------------------------------
+        // 3. UNIFIED CARD RENDERER (CLICK CARD TO SELECT + STOP PROPAGATION ON 📍 導航)
+        // -----------------------------------------------------------
+        function renderSelectableCardHTML(item) {
+            const isSelected = selectedIds.includes(item.id);
+            const isFood = item.cat === 'FOOD';
+
+            const catBadgeClass = isFood
+                ? 'bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700'
+                : 'bg-purple-100 dark:bg-purple-950/80 text-purple-800 dark:text-purple-300 border border-purple-300 dark:border-purple-700';
+
+            const catText = isFood ? '🍽️ 美食' : '🎉 娛樂';
+
+            const cardBorderClass = isSelected
+                ? 'border-2 border-emerald-500 bg-emerald-50/40 dark:bg-emerald-950/30 shadow-md ring-2 ring-emerald-500/20'
+                : 'border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-teal-400 shadow-sm';
+
+            const selectBtnClass = isSelected
+                ? 'bg-emerald-600 text-white font-black shadow-sm'
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold border border-slate-300 dark:border-slate-700 hover:bg-emerald-100';
+
+            return `
+            <div onclick="window.toggleSelectItem('${item.id}', event)" class="cursor-pointer p-3.5 rounded-2xl transition-all duration-150 flex flex-col justify-between gap-2.5 select-none active:scale-[0.99] ${cardBorderClass}">
+                <div>
+                    <div class="flex items-center justify-between gap-1.5">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <span class="px-2.5 py-0.5 rounded-lg text-[11px] font-black ${catBadgeClass}">
+                                ${catText}
+                            </span>
+                            <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400">
+                                ${item.subTag || ''}
+                            </span>
+                        </div>
+                        <button type="button" onclick="window.toggleSelectItem('${item.id}', event)" class="px-2.5 py-1 rounded-xl text-[11px] transition flex items-center gap-1 shrink-0 ${selectBtnClass}">
+                            ${isSelected ? '☑️ 已點選' : '⬜ 點選'}
+                        </button>
+                    </div>
+
+                    <h4 class="font-black text-sm sm:text-base mt-2 text-slate-900 dark:text-white leading-snug">
+                        ${item.name}
+                    </h4>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
+                        ${item.desc}
+                    </p>
+                </div>
+
+                <div class="pt-2.5 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-2">
+                    <div class="text-[11px] leading-tight">
+                        <div class="font-extrabold text-teal-700 dark:text-teal-300">${item.price}</div>
+                        <div class="text-slate-400">${item.drive}</div>
+                    </div>
+                    <a href="${getNavUrl(item.query)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="shrink-0 px-3 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs font-extrabold transition flex items-center gap-1 shadow-sm">
+                        📍 導航
+                    </a>
+                </div>
+            </div>
+            `;
+        }
+
+        window.toggleSelectItem = function(itemId, ev) {
+            if (ev) ev.stopPropagation();
+            const idx = selectedIds.indexOf(itemId);
+            const itemObj = getAllSelectableItems().find(i => i.id === itemId);
+            const label = itemObj ? itemObj.name : '項目';
+
+            if (idx > -1) {
+                selectedIds.splice(idx, 1);
+                window.showToast(`已取消點選：${label}`);
+            } else {
+                selectedIds.push(itemId);
+                window.showToast(`☑️ 已點選加入清單：${label}`);
+            }
+            localStorage.setItem('kp_selected_v5', JSON.stringify(selectedIds));
+            window.refreshAllViews();
+        };
+
+        window.selectAllInHub = function(hubKey, ev) {
+            if (ev) ev.stopPropagation();
+            const hub = HUBS_DATA.find(h => h.key === hubKey);
+            if (!hub) return;
+            const activeFilter = hubSubFilters[hubKey] || 'ALL';
+            hub.items.forEach(item => {
+                if (activeFilter === 'FOOD' && item.cat !== 'FOOD') return;
+                if (activeFilter === 'ENT' && item.cat !== 'ENT') return;
+                if (!selectedIds.includes(item.id)) selectedIds.push(item.id);
+            });
+            localStorage.setItem('kp_selected_v5', JSON.stringify(selectedIds));
+            window.refreshAllViews();
+            window.showToast(`☑️ 已全選「節點 ${hub.num}」目前顯示項目！`);
+        };
+
+        window.deselectAllInHub = function(hubKey, ev) {
+            if (ev) ev.stopPropagation();
+            const hub = HUBS_DATA.find(h => h.key === hubKey);
+            if (!hub) return;
+            const hubIds = hub.items.map(i => i.id);
+            selectedIds = selectedIds.filter(id => !hubIds.includes(id));
+            localStorage.setItem('kp_selected_v5', JSON.stringify(selectedIds));
+            window.refreshAllViews();
+            window.showToast(`已取消「節點 ${hub.num}」本區所有點選`);
+        };
+
+        window.updateSelectionCounters = function() {
+            const all = getAllSelectableItems();
+            const selItems = all.filter(i => selectedIds.includes(i.id));
+            const foodCount = selItems.filter(i => i.cat === 'FOOD').length;
+            const entCount = selItems.filter(i => i.cat === 'ENT').length;
+
+            document.getElementById('header-sel-count').textContent = selItems.length;
+            document.getElementById('bar-food-count').textContent = foodCount;
+            document.getElementById('bar-ent-count').textContent = entCount;
+            document.getElementById('bar-total-count').textContent = selItems.length;
+        };
+
+        // -----------------------------------------------------------
+        // 4. TAB 1: 5 HUBS EXPAND / COLLAPSE & FILTERING (100% RELIABLE)
+        // -----------------------------------------------------------
+        window.toggleMapDrawer = function() {
+            isMapOpen = !isMapOpen;
+            const mapEl = document.getElementById('island-map-drawer');
+            const btnEl = document.getElementById('btn-toggle-map');
+            if (mapEl) {
+                mapEl.style.display = isMapOpen ? 'block' : 'none';
+            }
+            if (btnEl) {
+                btnEl.textContent = isMapOpen ? '▲ 收合地圖' : '▼ 展開地圖';
+            }
+        };
+
+        window.toggleZone = function(hubKey, ev) {
+            if (ev) ev.stopPropagation();
+            const idx = openHubKeys.indexOf(hubKey);
+            const hub = HUBS_DATA.find(h => h.key === hubKey);
+            if (idx > -1) {
+                openHubKeys.splice(idx, 1);
+                if (hub) window.showToast(`➖ 已收合：節點 ${hub.num}`);
+            } else {
+                openHubKeys.push(hubKey);
+                if (hub) window.showToast(`➕ 已展開：節點 ${hub.num}`);
+            }
+            window.renderHubsAccordion();
+        };
+        window.toggleHub = window.toggleZone;
+
+        window.toggleAllZones = function() {
+            if (openHubKeys.length === HUBS_DATA.length) {
+                window.collapseAllZones();
+            } else {
+                window.expandAllZones();
+            }
+        };
+        window.toggleAllHubs = window.toggleAllZones;
+
+        window.expandAllZones = function() {
+            openHubKeys = HUBS_DATA.map(h => h.key);
+            window.renderHubsAccordion();
+            window.showToast('➕ 已展開全部 5 個區域清單！');
+        };
+        window.expandAllHubs = window.expandAllZones;
+
+        window.collapseAllZones = function() {
+            openHubKeys = [];
+            window.renderHubsAccordion();
+            window.showToast('➖ 已收合全部 5 個區域清單！');
+        };
+        window.collapseAllHubs = window.collapseAllZones;
+
+        window.jumpToHub = function(hubKey) {
+            if (!openHubKeys.includes(hubKey)) {
+                openHubKeys.push(hubKey);
+            }
+            window.renderHubsAccordion();
+            setTimeout(() => {
+                const el = document.getElementById('hub-card-' + hubKey);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 60);
+        };
+
+        window.setHubFilter = function(hubKey, filterVal, ev) {
+            if (ev) ev.stopPropagation();
+            hubSubFilters[hubKey] = filterVal;
+            if (!openHubKeys.includes(hubKey)) {
+                openHubKeys.push(hubKey);
+            }
+            window.renderHubsAccordion();
+        };
+
+        window.renderHubsAccordion = function() {
+            const container = document.getElementById('hubs-accordion-list');
+            if (!container) return;
+
+            const count = openHubKeys.length;
+            const total = HUBS_DATA.length;
+
+            const compactToggleBtn = document.getElementById('btn-compact-toggle-all');
+            if (compactToggleBtn) {
+                compactToggleBtn.textContent = count === total ? '➖ 收合全部區域' : '➕ 展開全部區域';
+            }
+
+            container.innerHTML = HUBS_DATA.map(hub => {
+                const isOpen = openHubKeys.includes(hub.key);
+                const activeFilter = hubSubFilters[hub.key] || 'ALL';
+
+                const foodItems = hub.items.filter(i => i.cat === 'FOOD');
+                const entItems = hub.items.filter(i => i.cat === 'ENT');
+                const selInHub = hub.items.filter(i => selectedIds.includes(i.id));
+
+                const filteredItems = hub.items.filter(item => {
+                    if (activeFilter === 'FOOD') return item.cat === 'FOOD';
+                    if (activeFilter === 'ENT') return item.cat === 'ENT';
+                    if (activeFilter === 'SELECTED') return selectedIds.includes(item.id);
+                    return true;
+                });
+
+                return `
+                <div id="hub-card-${hub.key}" class="scroll-mt-32 rounded-3xl bg-white dark:bg-slate-900 border-2 transition-all duration-200 overflow-hidden ${isOpen ? hub.borderActive + ' shadow-md' : 'border-slate-200 dark:border-slate-800 hover:border-teal-400 shadow-sm'}">
+                    <!-- Clickable Hub Header with Direct Zone Navigation + Expand/Collapse Button -->
+                    <div onclick="window.toggleZone('${hub.key}', event)" class="cursor-pointer p-4 sm:p-5 flex flex-col sm:flex-row sm:items-start justify-between gap-3 select-none">
+                        <div class="flex items-start gap-3">
+                            <span class="w-9 h-9 rounded-full ${hub.badgeBg} text-white font-black text-sm flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
+                                ${hub.num}
+                            </span>
+                            <div class="space-y-1">
+                                <h3 class="font-black text-base text-slate-900 dark:text-white leading-snug">${hub.title}</h3>
+                                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">${hub.desc}</p>
+                                <div class="pt-1 flex flex-wrap items-center gap-1.5 text-[11px] font-extrabold">
+                                    <span class="px-2 py-0.5 rounded-lg bg-amber-50 dark:bg-amber-950/70 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+                                        🍽️ 美食 ${foodItems.length}
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded-lg bg-purple-50 dark:bg-purple-950/70 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+                                        🎉 娛樂 ${entItems.length}
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                                        ☑️ 已點選 ${selInHub.length}
+                                    </span>
+                                    <span class="text-slate-400 font-medium ml-1"><i class="fa-solid fa-motorcycle mr-1"></i>${hub.driveBase}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 self-end sm:self-start shrink-0">
+                            <a href="${getNavUrl(hub.hubNavQuery)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="px-3 py-2 rounded-xl bg-rose-50 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800 font-extrabold text-xs hover:bg-rose-100 transition">
+                                📍 導航
+                            </a>
+                            <button type="button" onclick="window.toggleZone('${hub.key}', event)" class="px-3 py-2 rounded-xl font-black text-xs flex items-center gap-1.5 transition shadow-sm ${isOpen ? 'bg-teal-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700'}">
+                                <span>${isOpen ? '▲ 收合' : '▼ 展開'}</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Expandable Drawer (Using explicit inline display for 100% browser reliability) -->
+                    <div id="hub-drawer-${hub.key}" style="display: ${isOpen ? 'block' : 'none'};" class="px-4 pb-4 pt-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50/90 dark:bg-slate-950/60 space-y-3">
+                        <!-- Segmented Filter Tabs + Select All / Deselect All in Hub -->
+                        <div class="flex flex-wrap items-center justify-between gap-2 pb-1">
+                            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+                                <button type="button" onclick="window.setHubFilter('${hub.key}', 'ALL', event)" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-extrabold transition ${activeFilter === 'ALL' ? 'bg-slate-900 text-white dark:bg-teal-500 dark:text-slate-950 shadow-sm' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'}">
+                                    全部 (${hub.items.length})
+                                </button>
+                                <button type="button" onclick="window.setHubFilter('${hub.key}', 'FOOD', event)" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-extrabold transition ${activeFilter === 'FOOD' ? 'bg-amber-500 text-white shadow-sm' : 'bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800'}">
+                                    🍽️ 美食 (${foodItems.length})
+                                </button>
+                                <button type="button" onclick="window.setHubFilter('${hub.key}', 'ENT', event)" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-extrabold transition ${activeFilter === 'ENT' ? 'bg-purple-600 text-white shadow-sm' : 'bg-white dark:bg-slate-800 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800'}">
+                                    🎉 娛樂 (${entItems.length})
+                                </button>
+                                <button type="button" onclick="window.setHubFilter('${hub.key}', 'SELECTED', event)" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-extrabold transition ${activeFilter === 'SELECTED' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-white dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'}">
+                                    ☑️ 已點選 (${selInHub.length})
+                                </button>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-[11px] font-bold">
+                                <button type="button" onclick="window.selectAllInHub('${hub.key}', event)" class="px-2.5 py-1 rounded-lg bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 transition">☑️ 全選本區</button>
+                                <button type="button" onclick="window.deselectAllInHub('${hub.key}', event)" class="px-2.5 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-300 transition">取消本區</button>
+                            </div>
+                        </div>
+
+                        <!-- Selectable Cards Grid -->
+                        ${filteredItems.length === 0 ? `
+                            <div class="py-6 text-center text-xs text-slate-400">此分類目前沒有已點選項目，點擊上方「🍽️ 美食」或「🎉 娛樂」即可點選卡片！</div>
+                        ` : `
+                            <div class="grid sm:grid-cols-2 gap-2.5">
+                                ${filteredItems.map(item => renderSelectableCardHTML(item)).join('')}
+                            </div>
+                        `}
+                    </div>
+                </div>
+                `;
+            }).join('');
+        };
+
+        // -----------------------------------------------------------
+        // 5. TAB 2: ALL SPOTS EXPLORER & DIVE CALCULATOR
+        // -----------------------------------------------------------
+        window.setSpotZone = function(zoneKey) {
+            currentSpotZone = zoneKey;
+            document.querySelectorAll('.spot-zone-btn').forEach(btn => {
+                if (btn.getAttribute('data-zone') === zoneKey) {
+                    btn.className = 'spot-zone-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-extrabold bg-teal-600 text-white shadow-sm';
+                } else {
+                    btn.className = 'spot-zone-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300';
+                }
+            });
+            window.renderAllSpotsGrid();
+        };
+
+        window.setSpotCategory = function(cat) {
+            currentSpotCat = cat;
+            document.querySelectorAll('.spot-cat-btn').forEach(btn => {
+                if (btn.getAttribute('data-cat') === cat) {
+                    btn.className = 'spot-cat-btn shrink-0 px-4 py-2 rounded-xl text-xs font-extrabold bg-slate-900 text-white dark:bg-teal-500 dark:text-slate-950 shadow-sm';
+                } else {
+                    btn.className = 'spot-cat-btn shrink-0 px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300';
+                }
+            });
+            window.renderAllSpotsGrid();
+        };
+
+        window.renderAllSpotsGrid = function() {
+            const grid = document.getElementById('all-spots-grid');
+            if (!grid) return;
+            const q = (document.getElementById('spot-search-input')?.value || '').trim().toLowerCase();
+
+            const islandItems = [];
+            HUBS_DATA.forEach(h => h.items.forEach(i => islandItems.push({ ...i, hubKey: h.key })));
+
+            const filtered = islandItems.filter(item => {
+                if (currentSpotZone !== 'ALL' && item.hubKey !== currentSpotZone) return false;
+                if (currentSpotCat === 'FOOD' && item.cat !== 'FOOD') return false;
+                if (currentSpotCat === 'ENT' && item.cat !== 'ENT') return false;
+                if (currentSpotCat === 'SELECTED' && !selectedIds.includes(item.id)) return false;
+                if (q && !(item.name.toLowerCase().includes(q) || item.desc.toLowerCase().includes(q) || (item.subTag || '').toLowerCase().includes(q))) return false;
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-10 text-center text-slate-400 text-xs">找不到符合條件的項目，請切換區域、分類或清除搜尋文字。</div>`;
+                return;
+            }
+            grid.innerHTML = filtered.map(item => renderSelectableCardHTML(item)).join('');
+        };
+
+        window.calcDiveTotal = function() {
+            const baseRadio = document.querySelector('input[name="dive_base"]:checked');
+            let minTotal = baseRadio ? parseInt(baseRadio.getAttribute('data-min'), 10) : 4100;
+            let maxTotal = baseRadio ? parseInt(baseRadio.getAttribute('data-max'), 10) : 4400;
+
+            document.querySelectorAll('.dive-addon:checked').forEach(cb => {
+                minTotal += parseInt(cb.getAttribute('data-min'), 10);
+                maxTotal += parseInt(cb.getAttribute('data-max'), 10);
+            });
+
+            const display = document.getElementById('dive-total-display');
+            if (display) {
+                display.textContent = `฿${minTotal.toLocaleString()} - ฿${maxTotal.toLocaleString()}`;
+            }
+        };
+
+        // -----------------------------------------------------------
+        // 6. TAB 3: 6-DAY ITINERARY & MIXER (WITH EXPAND/COLLAPSE + 📍 導航 PILLS)
+        // -----------------------------------------------------------
+        window.toggleDayCard = function(dayIdx) {
+            const pos = openDayIndices.indexOf(dayIdx);
+            if (pos > -1) openDayIndices.splice(pos, 1);
+            else openDayIndices.push(dayIdx);
+            window.renderItineraryDays();
+        };
+
+        window.expandAllDays = function() {
+            openDayIndices = [0, 1, 2, 3, 4, 5];
+            window.renderItineraryDays();
+            window.showToast('➕ 已展開全部 6 天行程！');
+        };
+
+        window.collapseAllDays = function() {
+            openDayIndices = [];
+            window.renderItineraryDays();
+            window.showToast('➖ 已收合全部 6 天行程！');
+        };
+
+        window.setItineraryMode = function(mode) {
+            itineraryMode = mode;
+            const stdBtn = document.getElementById('btn-mode-std');
+            const mixBtn = document.getElementById('btn-mode-mix');
+            const selector = document.getElementById('std-plan-selector');
+
+            if (mode === 'STD') {
+                stdBtn.className = 'px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-teal-600 text-white shadow-sm transition';
+                mixBtn.className = 'px-3.5 py-1.5 rounded-xl text-xs font-extrabold text-slate-600 dark:text-slate-300 transition';
+                selector.classList.remove('hidden');
+            } else {
+                mixBtn.className = 'px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-teal-600 text-white shadow-sm transition';
+                stdBtn.className = 'px-3.5 py-1.5 rounded-xl text-xs font-extrabold text-slate-600 dark:text-slate-300 transition';
+                selector.classList.add('hidden');
+            }
+            window.renderItineraryDays();
+        };
+
+        window.selectPlan = function(code) {
+            currentPlanCode = code;
+            window.renderPlanSelector();
+            window.renderItineraryDays();
+        };
+
+        window.setCustomMixDay = function(dayIdx, planCode, ev) {
+            if (ev) ev.stopPropagation();
+            customMixPlans[dayIdx] = planCode;
+            if (!openDayIndices.includes(dayIdx)) openDayIndices.push(dayIdx);
+            window.renderItineraryDays();
+        };
+
+        window.renderPlanSelector = function() {
+            const container = document.getElementById('std-plan-selector');
+            if (!container) return;
+            container.innerHTML = Object.values(ITINERARY_PLANS).map(p => {
+                const active = p.code === currentPlanCode;
+                return `
+                <button type="button" onclick="window.selectPlan('${p.code}')" class="p-3 rounded-2xl border-2 text-left transition ${active ? 'border-teal-600 bg-teal-50/70 dark:bg-teal-950/60 shadow-sm' : 'border-slate-200 dark:border-slate-800 hover:border-teal-300'}">
+                    <div class="flex items-center justify-between">
+                        <span class="w-6 h-6 rounded-lg ${active ? 'bg-teal-600 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'} font-black text-xs flex items-center justify-center">${p.code}</span>
+                        <span class="text-[10px] font-bold text-teal-600 dark:text-teal-400">${p.budget}</span>
+                    </div>
+                    <div class="font-black text-xs sm:text-sm mt-1.5">${p.name}</div>
+                    <div class="text-[11px] text-slate-400 mt-0.5">${p.tag}</div>
+                </button>
+                `;
+            }).join('');
+        };
+
+        function renderDayNavPills(navLinks) {
+            if (!navLinks || navLinks.length === 0) return '';
+            return `
+                <div class="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-200/50 dark:border-slate-700/50">
+                    <span class="text-[11px] font-extrabold text-teal-700 dark:text-teal-400 mr-1">📍 當日景點快捷導航：</span>
+                    ${navLinks.map(link => `
+                        <a href="${getNavUrl(link.q)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" class="px-2.5 py-1 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-[11px] font-extrabold transition shadow-sm flex items-center gap-1">
+                            📍 導航：${link.label}
+                        </a>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        window.renderItineraryDays = function() {
+            const container = document.getElementById('itinerary-days-container');
+            if (!container) return;
+
+            if (itineraryMode === 'STD') {
+                const plan = ITINERARY_PLANS[currentPlanCode];
+                document.getElementById('plan-banner-title').textContent = `${plan.code}｜${plan.name}（${plan.tag}）`;
+                document.getElementById('plan-banner-desc').textContent = plan.desc;
+                document.getElementById('plan-banner-budget').textContent = plan.budget;
+
+                container.innerHTML = plan.days.map((d, i) => {
+                    const isOpen = openDayIndices.includes(i);
+                    return `
+                    <div class="rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 overflow-hidden">
+                        <div onclick="window.toggleDayCard(${i})" class="cursor-pointer p-4 flex flex-wrap items-center justify-between gap-2 select-none">
+                            <div class="flex items-center gap-2">
+                                <span class="px-2.5 py-1 rounded-lg bg-teal-600 text-white text-xs font-black">Day ${i + 1} • ${d.date}</span>
+                                <span class="text-xs font-extrabold text-teal-700 dark:text-teal-300">當日預估：฿${d.min.toLocaleString()} - ${d.max.toLocaleString()}</span>
+                            </div>
+                            <button type="button" class="px-2.5 py-1 rounded-lg text-xs font-extrabold ${isOpen ? 'bg-teal-600 text-white' : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-700'}">
+                                ${isOpen ? '▲ 收合' : '▼ 展開'}
+                            </button>
+                        </div>
+                        <div style="display: ${isOpen ? 'block' : 'none'};" class="px-4 pb-4 space-y-2.5 border-t border-slate-200/60 dark:border-slate-700/60 pt-3">
+                            <div class="grid sm:grid-cols-3 gap-2.5 text-xs">
+                                <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800"><div class="text-[10px] font-bold text-amber-500">☀️ 上午</div><div class="font-bold mt-0.5">${d.am}</div></div>
+                                <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800"><div class="text-[10px] font-bold text-sky-500">🌊 下午</div><div class="font-bold mt-0.5">${d.pm}</div></div>
+                                <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800"><div class="text-[10px] font-bold text-purple-500">🌙 晚上</div><div class="font-bold mt-0.5">${d.night}</div></div>
+                            </div>
+                            <div class="text-[11px] text-slate-500 dark:text-slate-400">💡 提醒：${d.note}</div>
+                            ${renderDayNavPills(d.navLinks)}
+                        </div>
+                    </div>
+                    `;
+                }).join('');
+            } else {
+                let totalMin = 0, totalMax = 0;
+                const rowsHTML = [0, 1, 2, 3, 4, 5].map(dayIdx => {
+                    const chosenCode = customMixPlans[dayIdx];
+                    const chosenPlan = ITINERARY_PLANS[chosenCode];
+                    const d = chosenPlan.days[dayIdx];
+                    const isOpen = openDayIndices.includes(dayIdx);
+                    totalMin += d.min;
+                    totalMax += d.max;
+                    return `
+                    <div class="rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 overflow-hidden">
+                        <div onclick="window.toggleDayCard(${dayIdx})" class="cursor-pointer p-4 flex flex-wrap items-center justify-between gap-2 select-none">
+                            <div class="flex items-center gap-2">
+                                <span class="px-2.5 py-1 rounded-lg bg-slate-900 dark:bg-teal-500 text-white dark:text-slate-950 text-xs font-black">Day ${dayIdx + 1} • ${d.date}</span>
+                                <span class="text-xs font-bold text-teal-600 dark:text-teal-400">套用：${chosenCode} ${chosenPlan.name} (฿${d.min}-${d.max})</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                ${['A', 'B', 'C', 'D', 'E'].map(code => `
+                                    <button type="button" onclick="window.setCustomMixDay(${dayIdx}, '${code}', event)" class="w-7 h-7 rounded-lg text-xs font-black transition ${chosenCode === code ? 'bg-teal-600 text-white shadow-sm' : 'bg-white dark:bg-slate-900 text-slate-500 border border-slate-200 dark:border-slate-700'}">${code}</button>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div style="display: ${isOpen ? 'block' : 'none'};" class="px-4 pb-4 pt-2 space-y-2.5 border-t border-slate-200/60 dark:border-slate-700/60">
+                            <div class="grid sm:grid-cols-3 gap-2 text-xs">
+                                <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900"><span class="text-[10px] text-amber-500 font-bold block">☀️ 上午</span><strong>${d.am}</strong></div>
+                                <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900"><span class="text-[10px] text-sky-500 font-bold block">🌊 下午</span><strong>${d.pm}</strong></div>
+                                <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900"><span class="text-[10px] text-purple-500 font-bold block">🌙 晚上</span><strong>${d.night}</strong></div>
+                            </div>
+                            ${renderDayNavPills(d.navLinks)}
+                        </div>
+                    </div>
+                    `;
+                }).join('');
+
+                document.getElementById('plan-banner-title').textContent = '🛠️ 每日自由混搭模式（點擊每日右側 A~E 即時替換）';
+                document.getElementById('plan-banner-desc').textContent = '自由混搭不同版本的單日行程，下方即時加總 6 天總預算區間並提供當日導航！';
+                document.getElementById('plan-banner-budget').textContent = `฿${totalMin.toLocaleString()} - ${totalMax.toLocaleString()}`;
+                container.innerHTML = rowsHTML;
+            }
+        };
+
+        // -----------------------------------------------------------
+        // 7. TAB 4: BKK GO & RETURN RENDERERS (ALL WITH 📍 導航)
+        // -----------------------------------------------------------
+        window.renderKsShops = function() {
+            const grid = document.getElementById('ks-shops-grid');
+            if (!grid) return;
+            grid.innerHTML = KS_SHOPS_DATA.map(item => renderSelectableCardHTML(item)).join('');
+        };
+
+        window.setBkkRestCat = function(cat) {
+            currentBkkRestCat = cat;
+            document.querySelectorAll('.bkk-rest-cat-btn').forEach(btn => {
+                if (btn.getAttribute('data-restcat') === cat) {
+                    btn.className = 'bkk-rest-cat-btn shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-indigo-600 text-white';
+                } else {
+                    btn.className = 'bkk-rest-cat-btn shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300';
+                }
+            });
+            window.renderBkkRestOptions();
+        };
+
+        window.renderBkkRestOptions = function() {
+            const grid = document.getElementById('bkk-rest-grid');
+            if (!grid) return;
+            const filtered = BKK_REST_OPTIONS.filter(item => currentBkkRestCat === 'ALL' || item.cat === currentBkkRestCat);
+            grid.innerHTML = filtered.map(item => renderSelectableCardHTML({ ...item, cat: 'ENT' })).join('');
+        };
+
+        window.setBkkSpotCat = function(cat) {
+            currentBkkSpotCat = cat;
+            document.querySelectorAll('.bkk-night-cat-btn').forEach(btn => {
+                if (btn.getAttribute('data-bkkcat') === cat) {
+                    btn.className = 'bkk-night-cat-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-extrabold bg-slate-900 text-white dark:bg-teal-500 dark:text-slate-950';
+                } else {
+                    btn.className = 'bkk-night-cat-btn shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300';
+                }
+            });
+            window.renderBkkSpots();
+        };
+
+        window.renderBkkSpots = function() {
+            const grid = document.getElementById('bkk-nightlife-grid');
+            if (!grid) return;
+            const filtered = BKK_SPOTS_DATA.filter(item => currentBkkSpotCat === 'ALL' || item.nightType === currentBkkSpotCat);
+            grid.innerHTML = filtered.map(item => renderSelectableCardHTML(item)).join('');
+        };
+
+        window.renderBkkLandmarks = function() {
+            const grid = document.getElementById('bkk-landmarks-grid');
+            if (!grid) return;
+            grid.innerHTML = BKK_LANDMARKS_DATA.map(item => renderSelectableCardHTML(item)).join('');
+        };
+
+        window.selectBkkTour = function(code) {
+            currentBkkTourCode = code;
+            ['A', 'B', 'C'].forEach(c => {
+                const btn = document.getElementById('btn-bkktour-' + c);
+                if (!btn) return;
+                btn.className = c === code
+                    ? 'px-3 py-1.5 rounded-xl text-xs font-extrabold bg-teal-600 text-white'
+                    : 'px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800';
+            });
+            window.renderBkkTourDetail();
+        };
+
+        window.renderBkkTourDetail = function() {
+            const box = document.getElementById('bkk-tour-detail-box');
+            if (!box) return;
+            const plan = BKK_TOURS_DATA[currentBkkTourCode];
+            box.innerHTML = `
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-teal-200/70 dark:border-teal-800">
+                    <div>
+                        <span class="px-2.5 py-0.5 rounded-md bg-teal-600 text-white text-[11px] font-black">${plan.badge}</span>
+                        <h5 class="font-black text-base mt-1">${plan.title}</h5>
+                    </div>
+                    <div class="text-sm font-black text-teal-600 dark:text-teal-400">預估：${plan.budget}</div>
+                </div>
+                <div class="grid sm:grid-cols-2 gap-2.5 pt-3 text-xs">
+                    ${plan.schedule.map(s => `
+                        <div class="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex items-center justify-between gap-2">
+                            <div>
+                                <div class="font-black text-teal-600 dark:text-teal-400">${s.time}</div>
+                                <div class="font-bold mt-0.5">${s.task}</div>
+                            </div>
+                            <a href="${getNavUrl(s.query)}" target="_blank" rel="noopener noreferrer" class="shrink-0 px-2.5 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-[11px] font-extrabold transition shadow-sm">
+                                📍 導航：${s.navName}
+                            </a>
+                        </div>
+                    `).join('')}
+                </div>
+                <p class="text-xs text-amber-700 dark:text-amber-300 font-bold pt-2.5">💡 ${plan.tip}</p>
+            `;
+        };
+
+        window.toggleChecklist = function(id) {
+            const idx = checkedListIds.indexOf(id);
+            if (idx > -1) checkedListIds.splice(idx, 1);
+            else checkedListIds.push(id);
+            localStorage.setItem('kp_chk_v5', JSON.stringify(checkedListIds));
+            window.renderBkkChecklist();
+        };
+
+        window.renderBkkChecklist = function() {
+            const box = document.getElementById('bkk-checklist-box');
+            if (!box) return;
+            box.innerHTML = BKK_CHECKLIST_ITEMS.map(item => {
+                const checked = checkedListIds.includes(item.id);
+                return `
+                <div onclick="window.toggleChecklist('${item.id}')" class="cursor-pointer p-3 rounded-2xl border transition select-none ${checked ? 'bg-teal-50 dark:bg-teal-950/50 border-teal-500' : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700'}">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-black ${checked ? 'text-teal-600 dark:text-teal-400' : 'text-slate-500'}">#${item.num} ${item.title}</span>
+                        <span class="w-5 h-5 rounded-md flex items-center justify-center text-xs ${checked ? 'bg-teal-600 text-white' : 'bg-white dark:bg-slate-900 border border-slate-300 text-transparent'}"><i class="fa-solid fa-check text-[10px]"></i></span>
+                    </div>
+                    <p class="text-[11px] mt-1 ${checked ? 'line-through text-slate-400' : 'text-slate-600 dark:text-slate-300'}">${item.desc}</p>
+                </div>
+                `;
+            }).join('');
+        };
+
+        // -----------------------------------------------------------
+        // 8. SELECTED ITEMS MODAL DRAWER (WITH DIRECT 📍 導航)
+        // -----------------------------------------------------------
+        window.setModalCat = function(cat) {
+            modalCatFilter = cat;
+            ['ALL', 'FOOD', 'ENT'].forEach(c => {
+                const btn = document.getElementById('mcat-' + c);
+                if (!btn) return;
+                btn.className = c === cat
+                    ? 'px-3 py-1 rounded-xl text-xs font-extrabold bg-slate-900 text-white dark:bg-teal-500 dark:text-slate-950'
+                    : 'px-3 py-1 rounded-xl text-xs font-bold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700';
+            });
+            window.renderSelectedModalList();
+        };
+
+        window.openSelectedModal = function() {
+            window.renderSelectedModalList();
+            document.getElementById('selected-modal').classList.remove('hidden');
+        };
+
+        window.closeSelectedModal = function() {
+            document.getElementById('selected-modal').classList.add('hidden');
+        };
+
+        window.renderSelectedModalList = function() {
+            const listEl = document.getElementById('selected-modal-list');
+            const all = getAllSelectableItems();
+            const selItems = all.filter(i => selectedIds.includes(i.id) && (modalCatFilter === 'ALL' || i.cat === modalCatFilter));
+
+            if (selItems.length === 0) {
+                listEl.innerHTML = `<div class="py-12 text-center text-slate-400 text-xs">目前在此分類還沒有已點選的項目，直接點擊頁面上的「🍽️ 美食」或「🎉 娛樂」卡片即可加入！</div>`;
+                return;
+            }
+
+            listEl.innerHTML = selItems.map(item => `
+                <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-3">
+                    <div>
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <span class="text-[10px] font-black px-2 py-0.5 rounded ${item.cat === 'FOOD' ? 'bg-amber-500 text-white' : 'bg-purple-600 text-white'}">
+                                ${item.cat === 'FOOD' ? '🍽️ 美食' : '🎉 娛樂'}
+                            </span>
+                            <span class="text-[11px] font-bold text-slate-400">${item.zoneLabel}</span>
+                        </div>
+                        <h4 class="font-black text-sm mt-1">${item.name}</h4>
+                        <div class="text-xs text-teal-600 dark:text-teal-400 font-bold mt-0.5">${item.price} ・ ${item.drive}</div>
+                    </div>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <a href="${getNavUrl(item.query)}" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs font-extrabold shadow-sm">
+                            📍 導航
+                        </a>
+                        <button type="button" onclick="window.toggleSelectItem('${item.id}'); window.renderSelectedModalList();" class="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950 text-rose-500 flex items-center justify-center" title="移除點選">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        };
+
+        window.copySelectedList = function() {
+            const all = getAllSelectableItems().filter(i => selectedIds.includes(i.id));
+            if (all.length === 0) {
+                window.showToast('目前清單是空的喔！');
+                return;
+            }
+            const foods = all.filter(i => i.cat === 'FOOD').map(i => `• [美食] ${i.name} (${i.price})`).join('\n');
+            const ents = all.filter(i => i.cat === 'ENT').map(i => `• [娛樂] ${i.name} (${i.price})`).join('\n');
+            const text = `【帕岸島旅行攻略・我的點選清單】\n\n🍽️ 美食清單：\n${foods || '（尚未點選）'}\n\n🎉 娛樂清單：\n${ents || '（尚未點選）'}`;
+            window.copyText(text, '📋 已複製您點選的美食＆娛樂清單！');
+        };
+
+        window.clearAllSelected = function() {
+            selectedIds = [];
+            localStorage.setItem('kp_selected_v5', JSON.stringify(selectedIds));
+            window.refreshAllViews();
+            window.renderSelectedModalList();
+            window.showToast('已清空所有點選項目');
+        };
+
+        // -----------------------------------------------------------
+        // 9. GENERAL NAVIGATION & HELPERS
+        // -----------------------------------------------------------
+        window.refreshAllViews = function() {
+            window.renderHubsAccordion();
+            window.renderAllSpotsGrid();
+            window.renderKsShops();
+            window.renderBkkRestOptions();
+            window.renderBkkSpots();
+            window.renderBkkLandmarks();
+            window.updateSelectionCounters();
+        };
+
+        window.switchMainTab = function(tabId) {
+            document.querySelectorAll('.tab-panel').forEach(el => el.classList.add('hidden'));
+            const target = document.getElementById(tabId);
+            if (target) target.classList.remove('hidden');
+
+            document.querySelectorAll('.main-tab-btn').forEach(btn => {
+                btn.className = 'main-tab-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200';
+            });
+            const activeBtn = document.getElementById('btn-' + tabId);
+            if (activeBtn) {
+                activeBtn.className = 'main-tab-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 bg-teal-600 text-white shadow-sm';
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.switchBkkSub = function(mode) {
+            const goPanel = document.getElementById('bkk-panel-go');
+            const backPanel = document.getElementById('bkk-panel-back');
+            const goBtn = document.getElementById('bkk-sub-go');
+            const backBtn = document.getElementById('bkk-sub-back');
+
+            if (mode === 'GO') {
+                goPanel.classList.remove('hidden');
+                backPanel.classList.add('hidden');
+                goBtn.className = 'py-2.5 px-3 rounded-xl text-xs sm:text-sm font-black bg-teal-600 text-white shadow-sm transition';
+                backBtn.className = 'py-2.5 px-3 rounded-xl text-xs sm:text-sm font-black text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition';
+            } else {
+                goPanel.classList.add('hidden');
+                backPanel.classList.remove('hidden');
+                backBtn.className = 'py-2.5 px-3 rounded-xl text-xs sm:text-sm font-black bg-indigo-600 text-white shadow-sm transition';
+                goBtn.className = 'py-2.5 px-3 rounded-xl text-xs sm:text-sm font-black text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition';
+            }
+        };
+
+        window.filterGoTransport = function(code) {
+            document.querySelectorAll('.go-trans-btn').forEach(btn => {
+                btn.className = btn.getAttribute('data-gotrans') === code
+                    ? 'go-trans-btn px-3 py-1.5 rounded-xl text-xs font-extrabold bg-teal-600 text-white'
+                    : 'go-trans-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800';
+            });
+            document.querySelectorAll('.go-trans-card').forEach(card => {
+                if (code === 'ALL' || card.getAttribute('data-transcard') === code) card.classList.remove('hidden');
+                else card.classList.add('hidden');
+            });
+        };
+
+        window.toggleTheme = function() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('kp_theme_v5', isDark ? 'dark' : 'light');
+            document.getElementById('theme-icon').className = isDark ? 'fa-solid fa-sun text-sm' : 'fa-solid fa-moon text-sm';
+        };
+
+        window.showToast = function(msg) {
+            const box = document.getElementById('toast-box');
+            document.getElementById('toast-msg').textContent = msg;
+            box.classList.remove('hidden');
+            clearTimeout(window._toastTimer);
+            window._toastTimer = setTimeout(() => box.classList.add('hidden'), 2200);
+        };
+
+        window.copyText = function(text, msg) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            window.showToast(msg || '已複製到剪貼簿！');
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('kp_theme_v5') === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('theme-icon').className = 'fa-solid fa-sun text-sm';
+            }
+
+            const savedSel = localStorage.getItem('kp_selected_v5');
+            if (savedSel) {
+                try { selectedIds = JSON.parse(savedSel); } catch (e) { selectedIds = []; }
+            } else {
+                selectedIds = getAllSelectableItems().filter(i => i.defaultSel).map(i => i.id);
+                localStorage.setItem('kp_selected_v5', JSON.stringify(selectedIds));
+            }
+
+            const savedChk = localStorage.getItem('kp_chk_v5');
+            if (savedChk) {
+                try { checkedListIds = JSON.parse(savedChk); } catch (e) {}
+            }
+
+            window.refreshAllViews();
+            window.renderPlanSelector();
+            window.renderItineraryDays();
+            window.renderBkkTourDetail();
+            window.renderBkkChecklist();
+            window.calcDiveTotal();
+        });
+    </script>
+</body>
+</html>
