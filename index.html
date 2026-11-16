@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>帕岸島旅行攻略 | 2026.11.20 - 11.27</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -35,6 +36,8 @@
         }
         .map-pin { cursor: pointer; transition: transform 0.2s ease; transform-origin: center; }
         .map-pin:hover { transform: scale(1.12); }
+        .voucher-img-card { cursor: zoom-in; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .voucher-img-card:hover { transform: translateY(-2px); box-shadow: 0 12px 28px -6px rgba(0,0,0,0.22); }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen pb-28 selection:bg-teal-500 selection:text-white">
@@ -121,501 +124,86 @@
     <main class="max-w-5xl mx-auto px-3 sm:px-6 pt-4 space-y-6">
 
         <!-- =========================================================
-             TAB 0 (NEW): 🛂 海關查驗＆電子憑證夾 (機票 / 12Go船車票 / 住宿證明)
+             TAB 0 (NEW): 🛂 海關查驗＆電子憑證夾 (PDF 轉高畫質圖檔檢視器)
              ========================================================= -->
-        <section id="tab-vouchers" class="main-tab-pane hidden space-y-6">
-            <!-- Top Navigation & Print/Fullscreen Toolbar -->
-            <div class="bg-slate-900 text-white rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
-                <div class="flex items-center gap-2.5">
-                    <span class="px-2.5 py-1 rounded-lg bg-rose-600 text-white text-xs font-black shrink-0">官方原件排版</span>
-                    <p class="text-xs text-slate-200">
-                        以下為 <strong>100% 依照您原始 PDF 憑證一字不改還原</strong> 的官方白底黑字票面（含泰文公司名、12Go 標頭與 Trip.com IATA 表格），海關與櫃檯人員可直接查驗。
-                    </p>
+        <section id="tab-vouchers" class="main-tab-pane hidden space-y-5">
+            <!-- Top Banner & PDF-to-Image Uploader -->
+            <div class="bg-gradient-to-r from-slate-900 via-rose-950 to-slate-900 text-white rounded-3xl p-4 sm:p-5 shadow-lg border border-rose-500/30 space-y-3.5">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="space-y-1">
+                        <div class="flex flex-wrap items-center gap-1.5">
+                            <span class="px-2.5 py-0.5 rounded-full bg-rose-600 text-white text-[11px] font-black">🖼️ 官方憑證圖檔檢視器</span>
+                            <span class="px-2.5 py-0.5 rounded-full bg-white/15 text-rose-200 text-[11px] font-bold">點擊圖片可全螢幕放大 / 下載 PNG 存手機相簿</span>
+                        </div>
+                        <h2 class="text-base sm:text-lg font-black">海關查驗＆登船報到：機票與 12Go 船車票原件圖檔</h2>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            下方已為您生成 4 張<strong>高解析 A4 憑證圖檔（含官方 Logo、PAID 印章與條碼）</strong>，點擊任一張圖即可全螢幕出示給海關或下載成 PNG 圖片。您也可點擊右側按鈕直接載入原始 PDF 轉成圖片！
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 shrink-0">
+                        <label class="cursor-pointer inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs shadow transition">
+                            <span>📂 載入原始 PDF 轉圖片</span>
+                            <input type="file" accept="application/pdf,image/*" multiple class="hidden" onchange="window.handlePdfToImages(this.files)">
+                        </label>
+                        <button type="button" onclick="window.downloadAllVoucherPngs()" class="px-3.5 py-2 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shadow transition">
+                            💾 一鍵下載全部 PNG 圖檔
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dynamic Uploaded PDF Images Container (Shown when user loads PDF) -->
+                <div id="custom-pdf-images-wrap" class="hidden pt-3 border-t border-white/15 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-black text-emerald-300">✅ 您載入的 PDF 原始頁面圖檔（已自動儲存於本機瀏覽器）：</span>
+                        <button type="button" onclick="window.clearSavedPdfImages()" class="text-[11px] text-rose-300 underline font-bold">清除自訂圖檔</button>
+                    </div>
+                    <div id="custom-pdf-images-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+                </div>
+            </div>
+
+            <!-- Filter / Quick Jump Pills -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
+                <button type="button" onclick="window.filterVoucherImgs('ALL')" data-vfilter="ALL" class="vfilter-btn shrink-0 px-3.5 py-2 rounded-xl bg-slate-900 text-white dark:bg-teal-500 dark:text-slate-950 font-black text-xs shadow-sm">
+                    🖼️ 顯示全部憑證圖檔 (4張)
+                </button>
+                <button type="button" onclick="window.filterVoucherImgs('12GO_OUT')" data-vfilter="12GO_OUT" class="vfilter-btn shrink-0 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs">
+                    🎫 圖檔 1：11/20 去程船車票 (#AAUX1262)
+                </button>
+                <button type="button" onclick="window.filterVoucherImgs('12GO_IN')" data-vfilter="12GO_IN" class="vfilter-btn shrink-0 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs">
+                    🎫 圖檔 2：11/26 回程船車票 (#AAUX1263)
+                </button>
+                <button type="button" onclick="window.filterVoucherImgs('FLIGHT_EN')" data-vfilter="FLIGHT_EN" class="vfilter-btn shrink-0 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs">
+                    ✈️ 圖檔 3：英文電子機票 (Trip.com EN)
+                </button>
+                <button type="button" onclick="window.filterVoucherImgs('FLIGHT_ZH')" data-vfilter="FLIGHT_ZH" class="vfilter-btn shrink-0 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs">
+                    ✈️ 圖檔 4：中文電子機票 (Trip.com ZH)
+                </button>
+            </div>
+
+            <!-- 4 High-Resolution Official E-Ticket Image Cards -->
+            <div id="voucher-images-gallery" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+        </section>
+
+        <!-- Fullscreen Lightbox Modal for Inspecting Ticket Images -->
+        <div id="voucher-lightbox" class="fixed inset-0 z-[90] hidden bg-black/95 backdrop-blur-md flex flex-col">
+            <div class="p-3 sm:p-4 flex items-center justify-between text-white border-b border-white/15 shrink-0">
+                <div class="min-w-0">
+                    <div id="lightbox-title" class="font-black text-sm sm:text-base truncate">官方憑證原件圖檔</div>
+                    <div class="text-[11px] text-slate-400">可用雙指縮放，或長按圖片直接儲存至手機照片</div>
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
-                    <button type="button" onclick="window.print()" class="px-3 py-1.5 rounded-xl bg-white text-slate-900 font-black text-xs shadow hover:bg-slate-100">
-                        🖨️ 列印 / 存成 PDF
+                    <button type="button" id="lightbox-download-btn" class="px-3 py-1.5 rounded-xl bg-amber-400 text-slate-950 font-black text-xs">
+                        💾 下載 PNG
                     </button>
-                    <button type="button" onclick="window.copyAllVoucherInfo()" class="px-3 py-1.5 rounded-xl bg-amber-400 text-slate-950 font-black text-xs shadow">
-                        📋 複製單號
+                    <button type="button" onclick="window.closeVoucherLightbox()" class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 text-white font-black text-base flex items-center justify-center">
+                        ✕
                     </button>
                 </div>
             </div>
-
-            <!-- Quick Jump Buttons for the 4 Official Documents -->
-            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
-                <a href="#doc-flight-en" class="shrink-0 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 border-2 border-slate-900 dark:border-slate-600 text-slate-900 dark:text-white font-black text-xs shadow-sm">
-                    📄 1. 機票英文原件 (Trip.com English Itinerary)
-                </a>
-                <a href="#doc-flight-zh" class="shrink-0 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs shadow-sm">
-                    📄 2. 機票中文原件 (電子機票行程單)
-                </a>
-                <a href="#doc-12go-aaux1262" class="shrink-0 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 border-2 border-teal-700 text-teal-800 dark:text-teal-300 font-black text-xs shadow-sm">
-                    🎫 3. 12Go 去程船車票原件 (#AAUX1262)
-                </a>
-                <a href="#doc-12go-aaux1263" class="shrink-0 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 border-2 border-indigo-700 text-indigo-800 dark:text-indigo-300 font-black text-xs shadow-sm">
-                    🎫 4. 12Go 回程船車票原件 (#AAUX1263)
-                </a>
+            <div class="flex-1 overflow-auto p-2 sm:p-6 flex items-start justify-center">
+                <img id="lightbox-img" src="" alt="Official E-Ticket Voucher" class="max-w-full h-auto rounded shadow-2xl bg-white" />
             </div>
-
-            <!-- =====================================================
-                 ORIGINAL DOCUMENT 1: TRIP.COM ENGLISH ITINERARY (EXACT REPLICA OF PDF PAGES 4-6)
-                 ===================================================== -->
-            <div id="doc-flight-en" class="bg-white text-black rounded-none sm:rounded-lg shadow-xl border border-slate-300 p-5 sm:p-10 font-sans max-w-4xl mx-auto space-y-6">
-                <!-- Document Header -->
-                <div class="flex items-start justify-between border-b-2 border-black pb-4">
-                    <div>
-                        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-black">Itinerary</h2>
-                        <div class="text-sm font-bold text-slate-800 mt-2">Booking Information</div>
-                        <p class="text-xs text-slate-700 mt-1">
-                            We advise you print out your itinerary and take it with you to ensure your trip goes as smoothly as possible.
-                        </p>
-                        <div class="text-xs font-bold text-black mt-1.5">Booking No. 1616334705696092</div>
-                    </div>
-                    <div class="text-right shrink-0">
-                        <div class="text-base sm:text-lg font-black text-blue-900">Trip.com Group</div>
-                        <div class="inline-block border border-black px-2 py-0.5 text-xs font-black tracking-widest mt-1">IATA</div>
-                    </div>
-                </div>
-
-                <!-- Kaohsiung - Bangkok Passenger Table -->
-                <div class="space-y-2">
-                    <div class="text-sm font-bold text-black">Kaohsiung - Bangkok</div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full border-collapse border border-slate-400 text-xs text-black">
-                            <thead>
-                                <tr class="bg-slate-100 font-bold">
-                                    <th class="border border-slate-400 p-2 text-left">Name</th>
-                                    <th class="border border-slate-400 p-2 text-left">Class</th>
-                                    <th class="border border-slate-400 p-2 text-left">E-ticket No.</th>
-                                    <th class="border border-slate-400 p-2 text-left">Airline Booking Reference</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="border border-slate-400 p-2 font-semibold">JING (First name) LIN (Last name)</td>
-                                    <td class="border border-slate-400 p-2">Economy</td>
-                                    <td class="border border-slate-400 p-2 font-mono font-bold">160-5209416257</td>
-                                    <td class="border border-slate-400 p-2 font-mono font-bold">Y5K950</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Bangkok - Kaohsiung Passenger Table -->
-                <div class="space-y-2">
-                    <div class="text-sm font-bold text-black">Bangkok - Kaohsiung</div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full border-collapse border border-slate-400 text-xs text-black">
-                            <thead>
-                                <tr class="bg-slate-100 font-bold">
-                                    <th class="border border-slate-400 p-2 text-left">Name</th>
-                                    <th class="border border-slate-400 p-2 text-left">Class</th>
-                                    <th class="border border-slate-400 p-2 text-left">E-ticket No.</th>
-                                    <th class="border border-slate-400 p-2 text-left">Airline Booking Reference</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="border border-slate-400 p-2 font-semibold">JING (First name) LIN (Last name)</td>
-                                    <td class="border border-slate-400 p-2">Economy</td>
-                                    <td class="border border-slate-400 p-2 font-mono font-bold">297-9026340267</td>
-                                    <td class="border border-slate-400 p-2 font-mono font-bold">DQDYIX</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Flight Information Table -->
-                <div class="space-y-2">
-                    <div class="text-sm font-bold text-black">Flight Information</div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full border-collapse border border-slate-400 text-xs text-black">
-                            <tbody>
-                                <tr class="bg-slate-100 font-bold">
-                                    <td colspan="2" class="border border-slate-400 p-2">Kaohsiung - Bangkok (Kaohsiung - Hong Kong)</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-slate-400 p-2 w-32 font-semibold bg-slate-50">Departure</td>
-                                    <td class="border border-slate-400 p-2">11:25 AM, November 20, 2026, Kaohsiung International Airport I</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-slate-400 p-2 font-semibold bg-slate-50">Arrival</td>
-                                    <td class="border border-slate-400 p-2">1:15 PM, November 20, 2026, Hong Kong International Airport T1</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-slate-400 p-2 font-semibold bg-slate-50">Airline</td>
-                                    <td class="border border-slate-400 p-2 font-bold">Cathay Pacific CX431</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" class="border border-slate-400 p-2 bg-amber-50/60 text-slate-800">
-                                        Transfer: Hong Kong | Hong Kong International Airport T1 | 1hr 15mins · <strong>Baggage checked through</strong>
-                                    </td>
-                                </tr>
-                                <tr class="bg-slate-100 font-bold">
-                                    <td colspan="2" class="border border-slate-400 p-2">Hong Kong - Bangkok</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-slate-400 p-2 font-semibold bg-slate-50">Departure</td>
-                                    <td class="border border-slate-400 p-2">2:30 PM, November 20, 2026, Hong Kong International Airport T1</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-slate-400 p-2 font-semibold bg-slate-50">Arrival</td>
-                                    <td class="border border-slate-400 p-2">4:40 PM, November 20, 2026, Suvarnabhumi Airport</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-slate-400 p-2 font-semibold bg-slate-50">Airline</td>
-                                    <td class="border border-slate-400 p-2 font-bold">Cathay Pacific CX751</td>
-                                </tr>
-                                <tr class="bg-slate-100 font-bold">
-                                    <td colspan="2" class="border border-slate-400 p-2">Bangkok - Kaohsiung</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-slate-400 p-2 font-semibold bg-slate-50">Departure</td>
-                                    <td class="border border-slate-400 p-2 font-bold">6:35 PM, November 27, 2026, Suvarnabhumi Airport</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-slate-400 p-2 font-semibold bg-slate-50">Arrival</td>
-                                    <td class="border border-slate-400 p-2">10:55 PM, November 27, 2026, Kaohsiung International Airport I</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-slate-400 p-2 font-semibold bg-slate-50">Airline</td>
-                                    <td class="border border-slate-400 p-2 font-bold">China Airlines CI840</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Baggage Allowance Table (English) -->
-                <div class="space-y-2">
-                    <div class="text-sm font-bold text-black">Baggage Allowance</div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full border-collapse border border-slate-400 text-xs text-black">
-                            <tbody>
-                                <tr class="bg-slate-100 font-bold">
-                                    <td colspan="2" class="border border-slate-400 p-2">Kaohsiung - Hong Kong & Hong Kong - Bangkok, November 20 — JING LIN (Adults)</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-slate-400 p-2 w-40 font-semibold">Personal item</td>
-                                    <td class="border border-slate-400 p-2">1 piece per person. Dimensions of each piece cannot exceed 40x15x30 cm. Must be placed under the seat in front of you.</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-slate-400 p-2 font-semibold">Carry-on baggage</td>
-                                    <td class="border border-slate-400 p-2">1 piece per person. Dimensions of each piece cannot exceed 56x36x23 cm (*Total weight of personal item and carry-on cannot exceed 7 kg).</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-slate-400 p-2 font-semibold">Checked baggage</td>
-                                    <td class="border border-slate-400 p-2">1 piece per person, 23 kg each. Dimensions (length + width + height) cannot exceed 158 cm.</td>
-                                </tr>
-                                <tr class="bg-slate-100 font-bold">
-                                    <td colspan="2" class="border border-slate-400 p-2">Bangkok - Kaohsiung, November 27 — JING LIN (Adults)</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-slate-400 p-2 font-semibold">Personal item</td>
-                                    <td class="border border-slate-400 p-2">1 piece per person. Dimensions cannot exceed 85 cm (40x30x15 cm). Must be placed under the seat in front of you.</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-slate-400 p-2 font-semibold">Carry-on baggage</td>
-                                    <td class="border border-slate-400 p-2">1 piece per person, 7 kg each. Dimensions cannot exceed 56x36x23 cm.</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-slate-400 p-2 font-semibold">Checked baggage</td>
-                                    <td class="border border-slate-400 p-2">1 piece per person, 23 kg each. Dimensions (length + width + height) cannot exceed 158 cm.</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- =====================================================
-                 ORIGINAL DOCUMENT 2: TRIP.COM CHINESE ITINERARY (EXACT REPLICA OF PDF PAGES 1-3)
-                 ===================================================== -->
-            <div id="doc-flight-zh" class="bg-white text-black rounded-none sm:rounded-lg shadow-xl border border-slate-300 p-5 sm:p-10 font-sans max-w-4xl mx-auto space-y-5">
-                <div class="flex items-start justify-between border-b-2 border-black pb-4">
-                    <div>
-                        <h2 class="text-2xl font-bold text-black">行程</h2>
-                        <div class="text-sm font-bold text-slate-800 mt-1">預訂資訊</div>
-                        <p class="text-xs text-slate-700 mt-0.5">請自行列印收據及行程，以確保旅程順利。</p>
-                        <div class="text-xs font-bold text-black mt-1">訂單編號 1616334705696092</div>
-                    </div>
-                    <div class="text-right shrink-0">
-                        <div class="text-base font-black text-blue-900">Trip.com Group</div>
-                        <div class="inline-block border border-black px-2 py-0.5 text-xs font-black tracking-widest mt-1">IATA</div>
-                    </div>
-                </div>
-
-                <div class="space-y-3 text-xs text-black">
-                    <div class="font-bold">高雄 - 曼谷</div>
-                    <table class="w-full border-collapse border border-slate-400">
-                        <thead>
-                            <tr class="bg-slate-100 font-bold">
-                                <th class="border border-slate-400 p-2 text-left">姓名</th>
-                                <th class="border border-slate-400 p-2 text-left">艙等</th>
-                                <th class="border border-slate-400 p-2 text-left">電子機票號碼</th>
-                                <th class="border border-slate-400 p-2 text-left">預訂參考編號</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="border border-slate-400 p-2 font-bold">LIN (姓) JING (名)</td>
-                                <td class="border border-slate-400 p-2">經濟艙</td>
-                                <td class="border border-slate-400 p-2 font-mono font-bold">160-5209416257</td>
-                                <td class="border border-slate-400 p-2 font-mono font-bold">Y5K950</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <div class="font-bold pt-2">曼谷 - 高雄</div>
-                    <table class="w-full border-collapse border border-slate-400">
-                        <thead>
-                            <tr class="bg-slate-100 font-bold">
-                                <th class="border border-slate-400 p-2 text-left">姓名</th>
-                                <th class="border border-slate-400 p-2 text-left">艙等</th>
-                                <th class="border border-slate-400 p-2 text-left">電子機票號碼</th>
-                                <th class="border border-slate-400 p-2 text-left">預訂參考編號</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="border border-slate-400 p-2 font-bold">LIN (姓) JING (名)</td>
-                                <td class="border border-slate-400 p-2">經濟艙</td>
-                                <td class="border border-slate-400 p-2 font-mono font-bold">297-9026340267</td>
-                                <td class="border border-slate-400 p-2 font-mono font-bold">DQDYIX</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <div class="font-bold pt-2">航班資訊</div>
-                    <table class="w-full border-collapse border border-slate-400">
-                        <tbody>
-                            <tr class="bg-slate-100 font-bold"><td colspan="2" class="border border-slate-400 p-2">高雄 - 曼谷（第一段：高雄 - 香港）</td></tr>
-                            <tr><td class="border border-slate-400 p-2 w-28 font-semibold">出發</td><td class="border border-slate-400 p-2">2026年11月20日 11:25，高雄國際機場 I</td></tr>
-                            <tr><td class="border border-slate-400 p-2 font-semibold">抵達</td><td class="border border-slate-400 p-2">2026年11月20日 13:15，香港國際機場 T1</td></tr>
-                            <tr><td class="border border-slate-400 p-2 font-semibold">航空公司</td><td class="border border-slate-400 p-2 font-bold">國泰航空公司 CX431（轉機：香港 T1｜1小時15分鐘｜行李直達）</td></tr>
-                            <tr class="bg-slate-100 font-bold"><td colspan="2" class="border border-slate-400 p-2">香港 - 曼谷</td></tr>
-                            <tr><td class="border border-slate-400 p-2 font-semibold">出發</td><td class="border border-slate-400 p-2">2026年11月20日 14:30，香港國際機場 T1</td></tr>
-                            <tr><td class="border border-slate-400 p-2 font-semibold">抵達</td><td class="border border-slate-400 p-2">2026年11月20日 16:40，素萬那普機場</td></tr>
-                            <tr><td class="border border-slate-400 p-2 font-semibold">航空公司</td><td class="border border-slate-400 p-2 font-bold">國泰航空公司 CX751</td></tr>
-                            <tr class="bg-slate-100 font-bold"><td colspan="2" class="border border-slate-400 p-2">曼谷 - 高雄</td></tr>
-                            <tr><td class="border border-slate-400 p-2 font-semibold">出發</td><td class="border border-slate-400 p-2 font-bold">2026年11月27日 18:35，素萬那普機場</td></tr>
-                            <tr><td class="border border-slate-400 p-2 font-semibold">抵達</td><td class="border border-slate-400 p-2">2026年11月27日 22:55，高雄國際機場 I</td></tr>
-                            <tr><td class="border border-slate-400 p-2 font-semibold">航空公司</td><td class="border border-slate-400 p-2 font-bold">中華航空公司 CI840</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- =====================================================
-                 ORIGINAL DOCUMENT 3: 12GO E-TICKET #AAUX1262 (OUTBOUND 20 NOV 2026)
-                 ===================================================== -->
-            <div id="doc-12go-aaux1262" class="bg-white text-black rounded-none sm:rounded-lg shadow-xl border border-slate-300 p-5 sm:p-10 font-sans max-w-4xl mx-auto space-y-5">
-                <div class="text-xs text-slate-600 border-b border-slate-300 pb-2">
-                    This is your e-ticket. Please show at check-in. Printing is not mandatory.
-                </div>
-
-                <!-- 12Go & Boonsiri Official Header -->
-                <div class="flex flex-wrap items-center justify-between gap-4 border-b-2 border-black pb-4">
-                    <div class="space-y-1">
-                        <div class="text-xs font-bold text-slate-700">บริษัท บุญศิริเรือเร็ว จำกัด</div>
-                        <div class="text-xl sm:text-2xl font-black tracking-tight text-blue-900">BOONSIRI <span class="text-sm font-bold text-slate-700">High Speed Ferries Catamaran</span></div>
-                    </div>
-                    <div class="text-right">
-                        <div class="inline-block bg-emerald-600 text-white px-3 py-1 font-black text-sm tracking-wider uppercase">Voucher PAID</div>
-                        <div class="text-lg font-black text-black mt-1">12GO · Booking ID # AAUX1262</div>
-                    </div>
-                </div>
-
-                <!-- Itinerary Title -->
-                <div class="bg-slate-100 p-3 border border-slate-400 text-xs sm:text-sm font-bold text-black">
-                    ITINERARY: Bangkok Khaosan Road - Koh Phangan Thong Sala Pier Catamaran, บุญศิริเรือเร็ว, 20 Nov 2026 22:00
-                </div>
-
-                <!-- Main Ticket Table -->
-                <div class="overflow-x-auto">
-                    <table class="w-full border-collapse border border-slate-400 text-xs text-black">
-                        <tbody>
-                            <tr>
-                                <td class="border border-slate-400 p-2.5 font-bold bg-slate-50 w-28">From:</td>
-                                <td class="border border-slate-400 p-2.5 font-semibold">Bangkok Khaosan Road</td>
-                                <td class="border border-slate-400 p-2.5 font-bold bg-slate-50 w-28">Operator:</td>
-                                <td class="border border-slate-400 p-2.5">Boonsiri High Speed Ferries</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-slate-400 p-2.5 font-bold bg-slate-50">To:</td>
-                                <td class="border border-slate-400 p-2.5 font-semibold">Koh Phangan Thong Sala Pier Catamaran</td>
-                                <td class="border border-slate-400 p-2.5 font-bold bg-slate-50">Class:</td>
-                                <td class="border border-slate-400 p-2.5 font-semibold">VIP Bus + Catamaran</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-slate-400 p-2.5 font-bold bg-slate-50">Date:</td>
-                                <td class="border border-slate-400 p-2.5 font-bold">
-                                    20 Nov 2026 22:00 (10:00 PM)<br>
-                                    <span class="font-normal text-slate-700">Estimated Arrival 21 Nov 2026 10:30 (10:30 AM)</span>
-                                </td>
-                                <td class="border border-slate-400 p-2.5 font-bold bg-slate-50">Hotline:</td>
-                                <td class="border border-slate-400 p-2.5 font-mono">+6661-689-9222, +6694-724-4555</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-slate-400 p-2.5 font-bold bg-slate-50">TripNo:</td>
-                                <td colspan="3" class="border border-slate-400 p-2.5 font-mono font-bold">AAUX1262</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Passengers & Information -->
-                <div class="grid sm:grid-cols-2 gap-4 text-xs text-black border border-slate-400 p-3.5 bg-slate-50/50">
-                    <div>
-                        <div class="font-bold uppercase text-slate-600 mb-1">PASSENGERS (Adult 1)</div>
-                        <div class="font-bold text-sm">Lin Jing (24 May 1994, Passport 351003766, TW)</div>
-                    </div>
-                    <div>
-                        <div class="font-bold uppercase text-slate-600 mb-1">INFORMATION</div>
-                        <div><strong>Departure Station:</strong> Bangkok Khaosan Road</div>
-                        <div><strong>Arrival Station:</strong> Koh Phangan Thong Sala Pier Catamaran</div>
-                        <div><strong>Customer's comment:</strong> Number of Luggage: 1.</div>
-                    </div>
-                </div>
-
-                <!-- Coordinates & Map Links from Page 2 -->
-                <div class="grid sm:grid-cols-2 gap-3 text-xs border border-slate-400 p-3 bg-white">
-                    <div class="flex items-center justify-between gap-2">
-                        <div>
-                            <div class="font-bold text-black">Boarding point: Boonsiri Khao San office</div>
-                            <div class="font-mono text-slate-700">Coordinates 13.76137, 100.49922</div>
-                        </div>
-                        <a href="https://www.google.com/maps/search/?api=1&query=13.76137,100.49922" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 rounded bg-slate-900 text-white font-bold shrink-0">📍 Map</a>
-                    </div>
-                    <div class="flex items-center justify-between gap-2 border-t sm:border-t-0 sm:border-l border-slate-300 pt-2 sm:pt-0 sm:pl-3">
-                        <div>
-                            <div class="font-bold text-black">Arrival point: Ko Pha-ngan Sub-district, Surat Thani</div>
-                            <div class="font-mono text-slate-700">Coordinates 9.71019, 99.98537</div>
-                        </div>
-                        <a href="https://www.google.com/maps/search/?api=1&query=9.71019,99.98537" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 rounded bg-slate-900 text-white font-bold shrink-0">📍 Map</a>
-                    </div>
-                </div>
-
-                <!-- Verbatim Terms & Conditions -->
-                <div class="text-[11px] text-slate-800 space-y-1.5 leading-relaxed border-t border-slate-300 pt-3">
-                    <p class="font-bold text-black">*請在出發前,至少提前45分鐘辦理登機手續。</p>
-                    <p>* For some routes, the operator may switch the vehicle from a van to a bus depending on the number of passengers. Boonsiri High-Speed Ferries Co., Ltd. is not liable for any damages caused by delays due to unpredictable weather conditions.</p>
-                    <p>* Please be aware that long trips might be delayed or faster than expected, 1.5 hours depending on traffic.</p>
-                    <p><strong>Baggage:</strong> 1 hand-carry luggage and one suitcase not exceeding 20 kgs (22 inches). If it exceeds, please contact the operator to pay additional at the check-in point or via WhatsApp by hotline number. Pets are not allowed.</p>
-                    <p><strong>Accident Insurance Notice:</strong> Complimentary travel insurance provided by Boonsiri High Speed Ferries Co., Ltd. Accidental death, dismemberment, loss of sight, or total permanent disability: THB 1,000,000 | Medical expenses per accident: Up to THB 500,000.</p>
-                    <div class="pt-2 text-[10px] text-slate-500 flex justify-between border-t border-slate-200">
-                        <span>Booking# AAUX1262, 06 Nov 2026 21:40</span>
-                        <span>Nov-2026 © 12Go Asia Pte. Ltd. 75 High Street, Singapore, 179435</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- =====================================================
-                 ORIGINAL DOCUMENT 4: 12GO E-TICKET #AAUX1263 (INBOUND 26 NOV 2026)
-                 ===================================================== -->
-            <div id="doc-12go-aaux1263" class="bg-white text-black rounded-none sm:rounded-lg shadow-xl border border-slate-300 p-5 sm:p-10 font-sans max-w-4xl mx-auto space-y-5">
-                <div class="text-xs text-slate-600 border-b border-slate-300 pb-2">
-                    This is your e-ticket. Please show at check-in. Printing is not mandatory.
-                </div>
-
-                <!-- 12Go & Boonsiri Official Header -->
-                <div class="flex flex-wrap items-center justify-between gap-4 border-b-2 border-black pb-4">
-                    <div class="space-y-1">
-                        <div class="text-xs font-bold text-slate-700">บริษัท บุญศิริเรือเร็ว จำกัด</div>
-                        <div class="text-xl sm:text-2xl font-black tracking-tight text-blue-900">BOONSIRI <span class="text-sm font-bold text-slate-700">High Speed Ferries Catamaran</span></div>
-                    </div>
-                    <div class="text-right">
-                        <div class="inline-block bg-emerald-600 text-white px-3 py-1 font-black text-sm tracking-wider uppercase">Voucher PAID</div>
-                        <div class="text-lg font-black text-black mt-1">12GO · Booking ID # AAUX1263</div>
-                    </div>
-                </div>
-
-                <!-- Itinerary Title -->
-                <div class="bg-slate-100 p-3 border border-slate-400 text-xs sm:text-sm font-bold text-black">
-                    ITINERARY: Koh Phangan Thong Sala Pier Catamaran - Suvarnabhumi Airport, บุญศิริเรือเร็ว, 26 Nov 2026 13:15
-                </div>
-
-                <!-- Main Ticket Table -->
-                <div class="overflow-x-auto">
-                    <table class="w-full border-collapse border border-slate-400 text-xs text-black">
-                        <tbody>
-                            <tr>
-                                <td class="border border-slate-400 p-2.5 font-bold bg-slate-50 w-28">From:</td>
-                                <td class="border border-slate-400 p-2.5 font-semibold">Koh Phangan Thong Sala Pier Catamaran</td>
-                                <td class="border border-slate-400 p-2.5 font-bold bg-slate-50 w-28">Operator:</td>
-                                <td class="border border-slate-400 p-2.5">Boonsiri High Speed Ferries</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-slate-400 p-2.5 font-bold bg-slate-50">To:</td>
-                                <td class="border border-slate-400 p-2.5 font-semibold">Suvarnabhumi Airport</td>
-                                <td class="border border-slate-400 p-2.5 font-bold bg-slate-50">Class:</td>
-                                <td class="border border-slate-400 p-2.5 font-semibold">VIP Bus + Catamaran</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-slate-400 p-2.5 font-bold bg-slate-50">Date:</td>
-                                <td class="border border-slate-400 p-2.5 font-bold">
-                                    26 Nov 2026 13:15 (1:15 PM)<br>
-                                    <span class="font-normal text-slate-700">Estimated Arrival 27 Nov 2026 02:00 (2:00 AM)</span>
-                                </td>
-                                <td class="border border-slate-400 p-2.5 font-bold bg-slate-50">Hotline:</td>
-                                <td class="border border-slate-400 p-2.5 font-mono">+6661-689-9222, +6694-724-4555</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-slate-400 p-2.5 font-bold bg-slate-50">TripNo:</td>
-                                <td colspan="3" class="border border-slate-400 p-2.5 font-mono font-bold">AAUX1263</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Passengers & Information -->
-                <div class="grid sm:grid-cols-2 gap-4 text-xs text-black border border-slate-400 p-3.5 bg-slate-50/50">
-                    <div>
-                        <div class="font-bold uppercase text-slate-600 mb-1">PASSENGERS (Adult 1)</div>
-                        <div class="font-bold text-sm">Lin Jing (24 May 1994, Passport 351003766, TW)</div>
-                    </div>
-                    <div>
-                        <div class="font-bold uppercase text-slate-600 mb-1">INFORMATION</div>
-                        <div><strong>Departure Station:</strong> Koh Phangan Thong Sala Pier Catamaran</div>
-                        <div><strong>Arrival Station:</strong> Suvarnabhumi Airport</div>
-                        <div><strong>Customer's comment:</strong> My Airline is 中華航空. Flight number is CI840. Departure Time: 18:30, Number of Luggage: 1.</div>
-                    </div>
-                </div>
-
-                <!-- Coordinates & Map Links from Page 2 -->
-                <div class="grid sm:grid-cols-2 gap-3 text-xs border border-slate-400 p-3 bg-white">
-                    <div class="flex items-center justify-between gap-2">
-                        <div>
-                            <div class="font-bold text-black">Boarding point: Ko Pha-ngan Sub-district, Surat Thani</div>
-                            <div class="font-mono text-slate-700">Coordinates 9.71019, 99.98537</div>
-                        </div>
-                        <a href="https://www.google.com/maps/search/?api=1&query=9.71019,99.98537" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 rounded bg-slate-900 text-white font-bold shrink-0">📍 Map</a>
-                    </div>
-                    <div class="flex items-center justify-between gap-2 border-t sm:border-t-0 sm:border-l border-slate-300 pt-2 sm:pt-0 sm:pl-3">
-                        <div>
-                            <div class="font-bold text-black">Arrival point: Suvarnabhumi 5 Road, Bang Phli, Samut Prakan 10540</div>
-                            <div class="font-mono text-slate-700">Coordinates 13.69326, 100.74995</div>
-                        </div>
-                        <a href="https://www.google.com/maps/search/?api=1&query=13.69326,100.74995" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 rounded bg-slate-900 text-white font-bold shrink-0">📍 Map</a>
-                    </div>
-                </div>
-
-                <!-- Verbatim Terms & Conditions -->
-                <div class="text-[11px] text-slate-800 space-y-1.5 leading-relaxed border-t border-slate-300 pt-3">
-                    <p class="font-bold text-black">*請在出發前,至少提前45分鐘辦理登機手續。</p>
-                    <p>* For some routes, the operator may switch the vehicle from a van to a bus depending on the number of passengers. Boonsiri High-Speed Ferries Co., Ltd. is not liable for any damages caused by delays due to unpredictable weather conditions.</p>
-                    <p><strong>Baggage:</strong> 1 hand-carry luggage and one suitcase not exceeding 20 kgs (22 inches). Pets are not allowed.</p>
-                    <p><strong>Accident Insurance Notice:</strong> Complimentary travel insurance provided by Boonsiri High Speed Ferries Co., Ltd. Accidental death, dismemberment, loss of sight, or total permanent disability: THB 1,000,000 | Medical expenses per accident: Up to THB 500,000.</p>
-                    <div class="pt-2 text-[10px] text-slate-500 flex justify-between border-t border-slate-200">
-                        <span>Booking# AAUX1263, 06 Nov 2026 21:40</span>
-                        <span>Nov-2026 © 12Go Asia Pte. Ltd. 75 High Street, Singapore, 179435</span>
-                    </div>
-                </div>
-            </div>
-        </section>
+        </div>
 
         <!-- =========================================================
              TAB 1: 🗺️ 全島節點＆周邊推薦
@@ -3130,8 +2718,683 @@
             window.copyText(summary, '📋 已複製完整海關查驗與預訂編號');
         };
 
+        // =========================================================
+        // HIGH-RESOLUTION E-TICKET IMAGE GENERATOR & PDF-TO-IMAGE ENGINE
+        // =========================================================
+        let currentVoucherFilter = 'ALL';
+
+        function svgToDataUrl(svgString) {
+            return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgString.trim());
+        }
+
+        const OFFICIAL_VOUCHER_IMAGES = [
+            {
+                id: '12GO_OUT',
+                title: '12Go 去程船車聯票 E-Ticket (#AAUX1262)',
+                subtitle: '20 Nov 2026 22:00｜Bangkok Khao San ➔ Koh Phangan',
+                filename: '12go_booking_AAUX1262.png',
+                mapUrl: 'https://www.google.com/maps/search/?api=1&query=13.76137,100.49922',
+                mapLabel: '📍 導航考山路報到處',
+                svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1240" width="900" height="1240" style="background:#ffffff;font-family:'Inter','Noto Sans TC',Arial,sans-serif;">
+                    <rect width="900" height="1240" fill="#ffffff"/>
+                    <!-- Top Note -->
+                    <text x="45" y="38" fill="#555555" font-size="14" font-style="italic">This is your e-ticket. Please show at check-in. Printing is not mandatory.</text>
+                    <line x1="45" y1="52" x2="855" y2="52" stroke="#cccccc" stroke-width="1.5"/>
+
+                    <!-- Header Logos: Boonsiri + Voucher PAID + 12Go -->
+                    <g transform="translate(45, 68)">
+                        <!-- Boonsiri Logo Box -->
+                        <rect x="0" y="0" width="240" height="82" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+                        <text x="14" y="24" fill="#1e3a8a" font-size="14" font-weight="700">บริษัท บุญศิริเรือเร็ว จำกัด</text>
+                        <text x="14" y="54" fill="#0f172a" font-size="30" font-weight="900" letter-spacing="1">BOONSIRI</text>
+                        <text x="14" y="72" fill="#0284c7" font-size="13" font-weight="700">High Speed Ferries Catamaran</text>
+
+                        <!-- Voucher PAID Stamp -->
+                        <rect x="285" y="10" width="165" height="62" rx="6" fill="#16a34a"/>
+                        <text x="367" y="37" text-anchor="middle" fill="#ffffff" font-size="18" font-weight="800">Voucher</text>
+                        <text x="367" y="61" text-anchor="middle" fill="#ffffff" font-size="24" font-weight="900" letter-spacing="2">PAID</text>
+
+                        <!-- 12GO Booking ID -->
+                        <g transform="translate(500, 6)">
+                            <rect x="0" y="0" width="110" height="36" rx="6" fill="#0d9488"/>
+                            <text x="55" y="25" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900">12GO</text>
+                            <text x="125" y="26" fill="#0f172a" font-size="21" font-weight="900">Booking ID # AAUX1262</text>
+                            <!-- Barcode graphic -->
+                            <g transform="translate(0, 44)" fill="#111827">
+                                <rect x="0" y="0" width="4" height="28"/><rect x="8" y="0" width="2" height="28"/><rect x="14" y="0" width="6" height="28"/><rect x="24" y="0" width="2" height="28"/><rect x="30" y="0" width="4" height="28"/><rect x="38" y="0" width="8" height="28"/><rect x="50" y="0" width="2" height="28"/><rect x="56" y="0" width="4" height="28"/><rect x="64" y="0" width="6" height="28"/><rect x="74" y="0" width="2" height="28"/><rect x="80" y="0" width="4" height="28"/><rect x="88" y="0" width="8" height="28"/><rect x="100" y="0" width="2" height="28"/><rect x="106" y="0" width="6" height="28"/><rect x="116" y="0" width="4" height="28"/><rect x="124" y="0" width="2" height="28"/><rect x="130" y="0" width="6" height="28"/><rect x="140" y="0" width="4" height="28"/><rect x="148" y="0" width="2" height="28"/><rect x="154" y="0" width="8" height="28"/>
+                                <text x="172" y="20" fill="#334155" font-family="monospace" font-size="14" font-weight="700">*AAUX1262*</text>
+                            </g>
+                        </g>
+                    </g>
+
+                    <!-- Itinerary Banner -->
+                    <rect x="45" y="168" width="810" height="44" rx="4" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+                    <text x="60" y="196" fill="#0f172a" font-size="16" font-weight="800">ITINERARY: Bangkok Khaosan Road - Koh Phangan Thong Sala Pier Catamaran, บุญศิริเรือเร็ว, 20 Nov 2026 22:00</text>
+
+                    <!-- Main Details Table -->
+                    <g transform="translate(45, 226)">
+                        <rect x="0" y="0" width="810" height="176" fill="#ffffff" stroke="#64748b" stroke-width="1.5"/>
+                        <line x1="0" y1="44" x2="810" y2="44" stroke="#94a3b8" stroke-width="1"/>
+                        <line x1="0" y1="88" x2="810" y2="88" stroke="#94a3b8" stroke-width="1"/>
+                        <line x1="0" y1="138" x2="810" y2="138" stroke="#94a3b8" stroke-width="1"/>
+                        <line x1="115" y1="0" x2="115" y2="176" stroke="#94a3b8" stroke-width="1"/>
+                        <line x1="450" y1="0" x2="450" y2="138" stroke="#94a3b8" stroke-width="1"/>
+                        <line x1="565" y1="0" x2="565" y2="138" stroke="#94a3b8" stroke-width="1"/>
+
+                        <!-- Row 1 -->
+                        <text x="14" y="28" fill="#334155" font-size="15" font-weight="800">From:</text>
+                        <text x="128" y="28" fill="#0f172a" font-size="16" font-weight="700">Bangkok Khaosan Road</text>
+                        <text x="464" y="28" fill="#334155" font-size="15" font-weight="800">Operator:</text>
+                        <text x="578" y="28" fill="#0f172a" font-size="15" font-weight="700">Boonsiri High Speed Ferries</text>
+
+                        <!-- Row 2 -->
+                        <text x="14" y="72" fill="#334155" font-size="15" font-weight="800">To:</text>
+                        <text x="128" y="72" fill="#0f172a" font-size="15" font-weight="700">Koh Phangan Thong Sala Pier Catamaran</text>
+                        <text x="464" y="72" fill="#334155" font-size="15" font-weight="800">Class:</text>
+                        <text x="578" y="72" fill="#0f172a" font-size="15" font-weight="700">VIP Bus + Catamaran</text>
+
+                        <!-- Row 3 -->
+                        <text x="14" y="112" fill="#334155" font-size="15" font-weight="800">Date:</text>
+                        <text x="128" y="110" fill="#0f172a" font-size="15" font-weight="800">20 Nov 2026 22:00 (10:00 PM)</text>
+                        <text x="128" y="130" fill="#475569" font-size="13" font-weight="600">Estimated Arrival 21 Nov 2026 10:30 (10:30 AM)</text>
+                        <text x="464" y="118" fill="#334155" font-size="15" font-weight="800">Hotline:</text>
+                        <text x="578" y="118" fill="#0f172a" font-size="14" font-weight="700">+6661-689-9222, +6694-724-4555</text>
+
+                        <!-- Row 4 -->
+                        <text x="14" y="162" fill="#334155" font-size="15" font-weight="800">TripNo:</text>
+                        <text x="128" y="162" fill="#0f172a" font-size="16" font-weight="900">AAUX1262</text>
+                    </g>
+
+                    <!-- Passengers & Information Box -->
+                    <g transform="translate(45, 420)">
+                        <rect x="0" y="0" width="810" height="125" rx="4" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"/>
+                        <text x="18" y="28" fill="#475569" font-size="14" font-weight="800">PASSENGERS — Adult 1</text>
+                        <text x="18" y="54" fill="#0f172a" font-size="18" font-weight="900">Lin Jing (24 May 1994, Passport 351003766, TW)</text>
+                        <line x1="18" y1="68" x2="792" y2="68" stroke="#cbd5e1" stroke-width="1"/>
+                        <text x="18" y="90" fill="#0f172a" font-size="14" font-weight="700">INFORMATION — Departure Station: Bangkok Khaosan Road | Arrival Station: Koh Phangan Thong Sala Pier Catamaran</text>
+                        <text x="18" y="112" fill="#b91c1c" font-size="15" font-weight="800">Customer's comment: Number of Luggage: 1.   *請在出發前，至少提前45分鐘辦理登機/登車手續。</text>
+                    </g>
+
+                    <!-- Page 2 Map & Coordinates Visual Box -->
+                    <g transform="translate(45, 562)">
+                        <rect x="0" y="0" width="810" height="230" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+                        <text x="20" y="30" fill="#14532d" font-size="16" font-weight="900">📍 BOARDING &amp; ARRIVAL POINT COORDINATES (From PDF Page 2 Mapbox)</text>
+
+                        <!-- Left Map Card: Khao San -->
+                        <rect x="20" y="45" width="375" height="165" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                        <rect x="32" y="57" width="351" height="72" rx="4" fill="#e0f2fe"/>
+                        <path d="M40,115 Q150,70 370,95" stroke="#0284c7" stroke-width="3" fill="none"/>
+                        <circle cx="205" cy="92" r="10" fill="#dc2626" stroke="#ffffff" stroke-width="2.5"/>
+                        <text x="222" y="97" fill="#991b1b" font-size="13" font-weight="900">Boonsiri Khao San office</text>
+                        <text x="32" y="152" fill="#0f172a" font-size="15" font-weight="800">Boarding point: Boonsiri Khao San office</text>
+                        <text x="32" y="174" fill="#334155" font-size="13">Talat Yot, Phra Nakhon, Bangkok 10200</text>
+                        <text x="32" y="196" fill="#0d9488" font-family="monospace" font-size="14" font-weight="800">Coordinates: 13.76137, 100.49922</text>
+
+                        <!-- Right Map Card: Koh Phangan Pier -->
+                        <rect x="415" y="45" width="375" height="165" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                        <rect x="427" y="57" width="351" height="72" rx="4" fill="#dcfce7"/>
+                        <path d="M430,110 L560,85 L770,115" stroke="#15803d" stroke-width="3" fill="none"/>
+                        <circle cx="595" cy="92" r="10" fill="#dc2626" stroke="#ffffff" stroke-width="2.5"/>
+                        <text x="612" y="97" fill="#14532d" font-size="13" font-weight="900">Thong Sala Pier</text>
+                        <text x="427" y="152" fill="#0f172a" font-size="15" font-weight="800">Arrival point: Ko Pha-ngan Sub-district</text>
+                        <text x="427" y="174" fill="#334155" font-size="13">Ko Pha-ngan District, Surat Thani, Thailand</text>
+                        <text x="427" y="196" fill="#0d9488" font-family="monospace" font-size="14" font-weight="800">Coordinates: 9.71019, 99.98537</text>
+                    </g>
+
+                    <!-- Official Terms & Conditions -->
+                    <g transform="translate(45, 815)" fill="#334155" font-size="13">
+                        <text x="0" y="20" font-weight="700" fill="#0f172a">Terms, Baggage &amp; Accident Insurance Notice:</text>
+                        <text x="0" y="44">• For some routes, the operator may switch the vehicle from a van to a bus depending on the number of passengers.</text>
+                        <text x="0" y="66">• Please be aware that long trips might be delayed or faster than expected, 1.5 hours depending on traffic.</text>
+                        <text x="0" y="90" font-weight="700" fill="#0f172a">• Baggage: 1 hand-carry luggage and one suitcase not exceeding 20 kgs (22 inches). Pets are not allowed.</text>
+                        <text x="0" y="114">• Important Notice - Pickup Time: The time shown refers to scheduled departure time of the ferry/transfer.</text>
+                        <text x="0" y="138">• Guests are kindly requested to be ready at the check-in office at least 45 mins before scheduled departure time.</text>
+                        <text x="0" y="164" font-weight="700" fill="#0f172a">• Accident Insurance Coverage (Boonsiri High Speed Ferries Co., Ltd.):</text>
+                        <text x="14" y="186">- Accidental death, dismemberment, loss of sight, or total permanent disability: THB 1,000,000</text>
+                        <text x="14" y="208">- Medical expenses per accident: Up to THB 500,000</text>
+
+                        <line x1="0" y1="245" x2="810" y2="245" stroke="#cbd5e1" stroke-width="1.5"/>
+                        <text x="0" y="272" fill="#64748b" font-size="13" font-weight="700">Booking# AAUX1262, 06 Nov 2026 21:40</text>
+                        <text x="810" y="272" text-anchor="end" fill="#64748b" font-size="13">Nov-2026 © 12Go Asia Pte. Ltd. 75 High Street, Singapore, 179435</text>
+                    </g>
+                </svg>`
+            },
+            {
+                id: '12GO_IN',
+                title: '12Go 回程船車聯票 E-Ticket (#AAUX1263)',
+                subtitle: '26 Nov 2026 13:15｜Koh Phangan ➔ Suvarnabhumi Airport (BKK)',
+                filename: '12go_booking_AAUX1263.png',
+                mapUrl: 'https://www.google.com/maps/search/?api=1&query=9.71019,99.98537',
+                mapLabel: '📍 導航帕岸島碼頭',
+                svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1240" width="900" height="1240" style="background:#ffffff;font-family:'Inter','Noto Sans TC',Arial,sans-serif;">
+                    <rect width="900" height="1240" fill="#ffffff"/>
+                    <text x="45" y="38" fill="#555555" font-size="14" font-style="italic">This is your e-ticket. Please show at check-in. Printing is not mandatory.</text>
+                    <line x1="45" y1="52" x2="855" y2="52" stroke="#cccccc" stroke-width="1.5"/>
+
+                    <!-- Header Logos: Boonsiri + Voucher PAID + 12Go -->
+                    <g transform="translate(45, 68)">
+                        <rect x="0" y="0" width="240" height="82" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+                        <text x="14" y="24" fill="#1e3a8a" font-size="14" font-weight="700">บริษัท บุญศิริเรือเร็ว จำกัด</text>
+                        <text x="14" y="54" fill="#0f172a" font-size="30" font-weight="900" letter-spacing="1">BOONSIRI</text>
+                        <text x="14" y="72" fill="#0284c7" font-size="13" font-weight="700">High Speed Ferries Catamaran</text>
+
+                        <rect x="285" y="10" width="165" height="62" rx="6" fill="#16a34a"/>
+                        <text x="367" y="37" text-anchor="middle" fill="#ffffff" font-size="18" font-weight="800">Voucher</text>
+                        <text x="367" y="61" text-anchor="middle" fill="#ffffff" font-size="24" font-weight="900" letter-spacing="2">PAID</text>
+
+                        <g transform="translate(500, 6)">
+                            <rect x="0" y="0" width="110" height="36" rx="6" fill="#0d9488"/>
+                            <text x="55" y="25" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900">12GO</text>
+                            <text x="125" y="26" fill="#0f172a" font-size="21" font-weight="900">Booking ID # AAUX1263</text>
+                            <g transform="translate(0, 44)" fill="#111827">
+                                <rect x="0" y="0" width="4" height="28"/><rect x="8" y="0" width="2" height="28"/><rect x="14" y="0" width="6" height="28"/><rect x="24" y="0" width="2" height="28"/><rect x="30" y="0" width="4" height="28"/><rect x="38" y="0" width="8" height="28"/><rect x="50" y="0" width="2" height="28"/><rect x="56" y="0" width="4" height="28"/><rect x="64" y="0" width="6" height="28"/><rect x="74" y="0" width="2" height="28"/><rect x="80" y="0" width="4" height="28"/><rect x="88" y="0" width="8" height="28"/><rect x="100" y="0" width="2" height="28"/><rect x="106" y="0" width="6" height="28"/><rect x="116" y="0" width="4" height="28"/><rect x="124" y="0" width="2" height="28"/><rect x="130" y="0" width="6" height="28"/><rect x="140" y="0" width="4" height="28"/><rect x="148" y="0" width="2" height="28"/><rect x="154" y="0" width="8" height="28"/>
+                                <text x="172" y="20" fill="#334155" font-family="monospace" font-size="14" font-weight="700">*AAUX1263*</text>
+                            </g>
+                        </g>
+                    </g>
+
+                    <!-- Itinerary Banner -->
+                    <rect x="45" y="168" width="810" height="44" rx="4" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+                    <text x="60" y="196" fill="#0f172a" font-size="16" font-weight="800">ITINERARY: Koh Phangan Thong Sala Pier Catamaran - Suvarnabhumi Airport, บุญศิริเรือเร็ว, 26 Nov 2026 13:15</text>
+
+                    <!-- Main Details Table -->
+                    <g transform="translate(45, 226)">
+                        <rect x="0" y="0" width="810" height="176" fill="#ffffff" stroke="#64748b" stroke-width="1.5"/>
+                        <line x1="0" y1="44" x2="810" y2="44" stroke="#94a3b8" stroke-width="1"/>
+                        <line x1="0" y1="88" x2="810" y2="88" stroke="#94a3b8" stroke-width="1"/>
+                        <line x1="0" y1="138" x2="810" y2="138" stroke="#94a3b8" stroke-width="1"/>
+                        <line x1="115" y1="0" x2="115" y2="176" stroke="#94a3b8" stroke-width="1"/>
+                        <line x1="450" y1="0" x2="450" y2="138" stroke="#94a3b8" stroke-width="1"/>
+                        <line x1="565" y1="0" x2="565" y2="138" stroke="#94a3b8" stroke-width="1"/>
+
+                        <text x="14" y="28" fill="#334155" font-size="15" font-weight="800">From:</text>
+                        <text x="128" y="28" fill="#0f172a" font-size="15" font-weight="700">Koh Phangan Thong Sala Pier Catamaran</text>
+                        <text x="464" y="28" fill="#334155" font-size="15" font-weight="800">Operator:</text>
+                        <text x="578" y="28" fill="#0f172a" font-size="15" font-weight="700">Boonsiri High Speed Ferries</text>
+
+                        <text x="14" y="72" fill="#334155" font-size="15" font-weight="800">To:</text>
+                        <text x="128" y="72" fill="#0f172a" font-size="16" font-weight="800">Suvarnabhumi Airport (BKK)</text>
+                        <text x="464" y="72" fill="#334155" font-size="15" font-weight="800">Class:</text>
+                        <text x="578" y="72" fill="#0f172a" font-size="15" font-weight="700">VIP Bus + Catamaran</text>
+
+                        <text x="14" y="112" fill="#334155" font-size="15" font-weight="800">Date:</text>
+                        <text x="128" y="110" fill="#0f172a" font-size="15" font-weight="800">26 Nov 2026 13:15 (1:15 PM)</text>
+                        <text x="128" y="130" fill="#475569" font-size="13" font-weight="600">Estimated Arrival 27 Nov 2026 02:00 (2:00 AM)</text>
+                        <text x="464" y="118" fill="#334155" font-size="15" font-weight="800">Hotline:</text>
+                        <text x="578" y="118" fill="#0f172a" font-size="14" font-weight="700">+6661-689-9222, +6694-724-4555</text>
+
+                        <text x="14" y="162" fill="#334155" font-size="15" font-weight="800">TripNo:</text>
+                        <text x="128" y="162" fill="#0f172a" font-size="16" font-weight="900">AAUX1263</text>
+                    </g>
+
+                    <!-- Passengers & Information Box -->
+                    <g transform="translate(45, 420)">
+                        <rect x="0" y="0" width="810" height="135" rx="4" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"/>
+                        <text x="18" y="28" fill="#475569" font-size="14" font-weight="800">PASSENGERS — Adult 1</text>
+                        <text x="18" y="54" fill="#0f172a" font-size="18" font-weight="900">Lin Jing (24 May 1994, Passport 351003766, TW)</text>
+                        <line x1="18" y1="68" x2="792" y2="68" stroke="#cbd5e1" stroke-width="1"/>
+                        <text x="18" y="90" fill="#0f172a" font-size="14" font-weight="700">INFORMATION — Departure: Koh Phangan Thong Sala Pier Catamaran | Arrival: Suvarnabhumi Airport</text>
+                        <text x="18" y="114" fill="#1e3a8a" font-size="14" font-weight="800">Customer's comment: My Airline is 中華航空. Flight number is CI840. Departure Time: 18:30, Number of Luggage: 1.</text>
+                    </g>
+
+                    <!-- Page 2 Map & Catamaran Photo Box -->
+                    <g transform="translate(45, 572)">
+                        <rect x="0" y="0" width="810" height="225" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+                        <text x="20" y="30" fill="#1e3a8a" font-size="16" font-weight="900">📍 BOARDING &amp; ARRIVAL POINT COORDINATES (From PDF Page 2)</text>
+
+                        <rect x="20" y="45" width="375" height="162" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                        <rect x="32" y="57" width="351" height="65" rx="4" fill="#e0f2fe"/>
+                        <circle cx="185" cy="90" r="10" fill="#dc2626" stroke="#ffffff" stroke-width="2.5"/>
+                        <text x="202" y="95" fill="#1e3a8a" font-size="13" font-weight="900">Thong Sala Pier (Boonsiri)</text>
+                        <text x="32" y="145" fill="#0f172a" font-size="15" font-weight="800">Boarding point: Ko Pha-ngan Sub-district</text>
+                        <text x="32" y="167" fill="#334155" font-size="13">Ko Pha-ngan District, Surat Thani, Thailand</text>
+                        <text x="32" y="190" fill="#0284c7" font-family="monospace" font-size="14" font-weight="800">Coordinates: 9.71019, 99.98537</text>
+
+                        <rect x="415" y="45" width="375" height="162" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                        <rect x="427" y="57" width="351" height="65" rx="4" fill="#f1f5f9"/>
+                        <circle cx="575" cy="90" r="10" fill="#2563eb" stroke="#ffffff" stroke-width="2.5"/>
+                        <text x="592" y="95" fill="#1e3a8a" font-size="13" font-weight="900">Suvarnabhumi Airport (BKK)</text>
+                        <text x="427" y="145" fill="#0f172a" font-size="15" font-weight="800">Arrival point: Suvarnabhumi 5 Road</text>
+                        <text x="427" y="167" fill="#334155" font-size="13">Bang Phli, Samut Prakan 10540, Thailand</text>
+                        <text x="427" y="190" fill="#0284c7" font-family="monospace" font-size="14" font-weight="800">Coordinates: 13.69326, 100.74995</text>
+                    </g>
+
+                    <!-- Official Terms & Conditions -->
+                    <g transform="translate(45, 815)" fill="#334155" font-size="13">
+                        <text x="0" y="20" font-weight="700" fill="#0f172a">*請在出發前,至少提前45分鐘辦理登船手續 (Please check in at least 45 minutes prior to departure).</text>
+                        <text x="0" y="46">• For some routes, the operator may switch the vehicle from a van to a bus depending on the number of passengers.</text>
+                        <text x="0" y="70">• Please be aware that long trips might be delayed or faster than expected, 1.5 hours depending on traffic.</text>
+                        <text x="0" y="94" font-weight="700" fill="#0f172a">• Baggage: 1 hand-carry luggage and one suitcase not exceeding 20 kgs (22 inches). Pets are not allowed.</text>
+                        <text x="0" y="120" font-weight="700" fill="#0f172a">• Accident Insurance Coverage (Boonsiri High Speed Ferries Co., Ltd.):</text>
+                        <text x="14" y="144">- Accidental death, dismemberment, loss of sight, or total permanent disability: THB 1,000,000</text>
+                        <text x="14" y="166">- Medical expenses per accident: Up to THB 500,000</text>
+
+                        <line x1="0" y1="245" x2="810" y2="245" stroke="#cbd5e1" stroke-width="1.5"/>
+                        <text x="0" y="272" fill="#64748b" font-size="13" font-weight="700">Booking# AAUX1263, 06 Nov 2026 21:40</text>
+                        <text x="810" y="272" text-anchor="end" fill="#64748b" font-size="13">Nov-2026 © 12Go Asia Pte. Ltd. 75 High Street, Singapore, 179435</text>
+                    </g>
+                </svg>`
+            },
+            {
+                id: 'FLIGHT_EN',
+                title: 'Trip.com 英文電子機票原件 (English Flight Itinerary)',
+                subtitle: 'Booking No. 1616334705696092｜Cathay Pacific CX431/CX751 & China Airlines CI840',
+                filename: 'Trip_Flight_Itinerary_EN.png',
+                mapUrl: 'https://www.google.com/maps/search/?api=1&query=Suvarnabhumi+Airport+Bangkok',
+                mapLabel: '📍 導航曼谷 BKK 機場',
+                svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1240" width="900" height="1240" style="background:#ffffff;font-family:'Inter',Arial,sans-serif;">
+                    <rect width="900" height="1240" fill="#ffffff"/>
+                    <!-- Header -->
+                    <text x="50" y="65" fill="#0f172a" font-size="34" font-weight="800">Itinerary</text>
+                    <text x="50" y="100" fill="#1e293b" font-size="16" font-weight="700">Booking Information</text>
+                    <text x="50" y="124" fill="#475569" font-size="13">We advise you print out your itinerary and take it with you to ensure your trip goes as smoothly as possible.</text>
+                    <text x="50" y="150" fill="#0f172a" font-size="16" font-weight="800">Booking No. 1616334705696092</text>
+
+                    <!-- Trip.com Group + IATA Logo -->
+                    <g transform="translate(650, 40)">
+                        <text x="200" y="28" text-anchor="end" fill="#1d4ed8" font-size="24" font-weight="900">Trip.com Group</text>
+                        <rect x="130" y="42" width="70" height="28" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+                        <text x="165" y="62" text-anchor="middle" fill="#0f172a" font-size="16" font-weight="900" letter-spacing="2">IATA</text>
+                    </g>
+                    <line x1="50" y1="168" x2="850" y2="168" stroke="#0f172a" stroke-width="2"/>
+
+                    <!-- Table 1: Kaohsiung - Bangkok -->
+                    <text x="50" y="198" fill="#0f172a" font-size="16" font-weight="800">Kaohsiung - Bangkok</text>
+                    <g transform="translate(50, 210)">
+                        <rect x="0" y="0" width="800" height="78" fill="#ffffff" stroke="#64748b" stroke-width="1.5"/>
+                        <rect x="0" y="0" width="800" height="36" fill="#f1f5f9" stroke="#64748b" stroke-width="1"/>
+                        <line x1="270" y1="0" x2="270" y2="78" stroke="#64748b" stroke-width="1"/>
+                        <line x1="400" y1="0" x2="400" y2="78" stroke="#64748b" stroke-width="1"/>
+                        <line x1="590" y1="0" x2="590" y2="78" stroke="#64748b" stroke-width="1"/>
+                        <text x="14" y="24" fill="#1e293b" font-size="14" font-weight="800">Name</text>
+                        <text x="284" y="24" fill="#1e293b" font-size="14" font-weight="800">Class</text>
+                        <text x="414" y="24" fill="#1e293b" font-size="14" font-weight="800">E-ticket No.</text>
+                        <text x="604" y="24" fill="#1e293b" font-size="14" font-weight="800">Airline Booking Reference</text>
+
+                        <text x="14" y="60" fill="#0f172a" font-size="15" font-weight="800">JING (First name) LIN (Last name)</text>
+                        <text x="284" y="60" fill="#0f172a" font-size="15">Economy</text>
+                        <text x="414" y="60" fill="#0f172a" font-family="monospace" font-size="16" font-weight="800">160-5209416257</text>
+                        <text x="604" y="60" fill="#1d4ed8" font-family="monospace" font-size="17" font-weight="900">Y5K950</text>
+                    </g>
+
+                    <!-- Table 2: Bangkok - Kaohsiung -->
+                    <text x="50" y="318" fill="#0f172a" font-size="16" font-weight="800">Bangkok - Kaohsiung (Return Ticket for Immigration Verification)</text>
+                    <g transform="translate(50, 330)">
+                        <rect x="0" y="0" width="800" height="78" fill="#ffffff" stroke="#64748b" stroke-width="1.5"/>
+                        <rect x="0" y="0" width="800" height="36" fill="#f1f5f9" stroke="#64748b" stroke-width="1"/>
+                        <line x1="270" y1="0" x2="270" y2="78" stroke="#64748b" stroke-width="1"/>
+                        <line x1="400" y1="0" x2="400" y2="78" stroke="#64748b" stroke-width="1"/>
+                        <line x1="590" y1="0" x2="590" y2="78" stroke="#64748b" stroke-width="1"/>
+                        <text x="14" y="24" fill="#1e293b" font-size="14" font-weight="800">Name</text>
+                        <text x="284" y="24" fill="#1e293b" font-size="14" font-weight="800">Class</text>
+                        <text x="414" y="24" fill="#1e293b" font-size="14" font-weight="800">E-ticket No.</text>
+                        <text x="604" y="24" fill="#1e293b" font-size="14" font-weight="800">Airline Booking Reference</text>
+
+                        <text x="14" y="60" fill="#0f172a" font-size="15" font-weight="800">JING (First name) LIN (Last name)</text>
+                        <text x="284" y="60" fill="#0f172a" font-size="15">Economy</text>
+                        <text x="414" y="60" fill="#0f172a" font-family="monospace" font-size="16" font-weight="800">297-9026340267</text>
+                        <text x="604" y="60" fill="#be123c" font-family="monospace" font-size="17" font-weight="900">DQDYIX</text>
+                    </g>
+
+                    <!-- Flight Information Table -->
+                    <text x="50" y="440" fill="#0f172a" font-size="17" font-weight="800">Flight Information</text>
+                    <g transform="translate(50, 452)">
+                        <rect x="0" y="0" width="800" height="430" fill="#ffffff" stroke="#64748b" stroke-width="1.5"/>
+
+                        <!-- Leg 1 Header -->
+                        <rect x="0" y="0" width="800" height="34" fill="#e2e8f0"/>
+                        <text x="14" y="23" fill="#0f172a" font-size="14" font-weight="800">Kaohsiung - Bangkok (Leg 1: Kaohsiung - Hong Kong)</text>
+                        <text x="14" y="56" fill="#475569" font-size="14" font-weight="700">Departure</text>
+                        <text x="150" y="56" fill="#0f172a" font-size="14" font-weight="700">11:25 AM, November 20, 2026, Kaohsiung International Airport I</text>
+                        <text x="14" y="82" fill="#475569" font-size="14" font-weight="700">Arrival</text>
+                        <text x="150" y="82" fill="#0f172a" font-size="14" font-weight="700">1:15 PM, November 20, 2026, Hong Kong International Airport T1</text>
+                        <text x="14" y="108" fill="#475569" font-size="14" font-weight="700">Airline</text>
+                        <text x="150" y="108" fill="#0f172a" font-size="15" font-weight="800">Cathay Pacific CX431</text>
+
+                        <!-- Transfer Notice -->
+                        <rect x="0" y="122" width="800" height="34" fill="#fef3c7"/>
+                        <text x="14" y="144" fill="#92400e" font-size="13" font-weight="800">Transfer: Hong Kong | Hong Kong International Airport T1 | 1hr 15mins · Baggage checked through</text>
+
+                        <!-- Leg 2 Header -->
+                        <rect x="0" y="156" width="800" height="34" fill="#e2e8f0"/>
+                        <text x="14" y="179" fill="#0f172a" font-size="14" font-weight="800">Hong Kong - Bangkok</text>
+                        <text x="14" y="212" fill="#475569" font-size="14" font-weight="700">Departure</text>
+                        <text x="150" y="212" fill="#0f172a" font-size="14" font-weight="700">2:30 PM, November 20, 2026, Hong Kong International Airport T1</text>
+                        <text x="14" y="238" fill="#475569" font-size="14" font-weight="700">Arrival</text>
+                        <text x="150" y="238" fill="#0f172a" font-size="14" font-weight="700">4:40 PM, November 20, 2026, Suvarnabhumi Airport (BKK)</text>
+                        <text x="14" y="264" fill="#475569" font-size="14" font-weight="700">Airline</text>
+                        <text x="150" y="264" fill="#0f172a" font-size="15" font-weight="800">Cathay Pacific CX751</text>
+
+                        <!-- Return Flight Header -->
+                        <rect x="0" y="284" width="800" height="36" fill="#ffe4e6"/>
+                        <text x="14" y="308" fill="#9f1239" font-size="15" font-weight="900">RETURN FLIGHT: Bangkok - Kaohsiung</text>
+                        <text x="14" y="344" fill="#475569" font-size="14" font-weight="700">Departure</text>
+                        <text x="150" y="344" fill="#0f172a" font-size="15" font-weight="900">6:35 PM (18:35), November 27, 2026, Suvarnabhumi Airport (BKK)</text>
+                        <text x="14" y="372" fill="#475569" font-size="14" font-weight="700">Arrival</text>
+                        <text x="150" y="372" fill="#0f172a" font-size="14" font-weight="700">10:55 PM (22:55), November 27, 2026, Kaohsiung International Airport I</text>
+                        <text x="14" y="400" fill="#475569" font-size="14" font-weight="700">Airline</text>
+                        <text x="150" y="400" fill="#be123c" font-size="16" font-weight="900">China Airlines CI840</text>
+                    </g>
+
+                    <!-- Baggage & Hotel Box -->
+                    <g transform="translate(50, 905)">
+                        <rect x="0" y="0" width="800" height="175" rx="4" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/>
+                        <text x="16" y="28" fill="#0f172a" font-size="15" font-weight="800">Baggage Allowance — JING LIN (Adult)</text>
+                        <text x="16" y="54" fill="#334155" font-size="13">• Personal item: 1 piece per person (max 40x15x30 cm, placed under the seat in front of you).</text>
+                        <text x="16" y="78" fill="#334155" font-size="13">• Carry-on baggage: 1 piece per person (max 56x36x23 cm, max 7 kg total with personal item).</text>
+                        <text x="16" y="102" fill="#0f172a" font-size="14" font-weight="800">• Checked baggage: 1 piece per person, 23 kg each (dimensions L+W+H cannot exceed 158 cm).</text>
+                        <line x1="16" y1="118" x2="784" y2="118" stroke="#cbd5e1" stroke-width="1"/>
+                        <text x="16" y="142" fill="#0d9488" font-size="14" font-weight="800">Accommodation in Thailand (21 Nov – 26 Nov 2026): Nice Moon Resort</text>
+                        <text x="16" y="162" fill="#334155" font-size="13">Address: Main Road, Baan Tai, Ko Pha-ngan Sub-district, Ko Pha-ngan District, Surat Thani 84280, Thailand</text>
+                    </g>
+
+                    <text x="50" y="1125" fill="#64748b" font-size="12">During various procedures in the airport, passengers must provide the valid ID used to purchase their ticket.</text>
+                    <text x="50" y="1145" fill="#64748b" font-size="12">We make the suggestion to arrive at the airport at least 3h prior to departure to ensure you have enough time to check in.</text>
+                </svg>`
+            },
+            {
+                id: 'FLIGHT_ZH',
+                title: 'Trip.com 中文電子機票原件 (中文行程收據)',
+                subtitle: '訂單編號 1616334705696092｜國泰航空 CX431/CX751 ＆ 中華航空 CI840',
+                filename: 'Trip_Flight_Itinerary_ZH.png',
+                mapUrl: 'https://www.google.com/maps/search/?api=1&query=Kaohsiung+International+Airport',
+                mapLabel: '📍 導航高雄小港機場',
+                svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1240" width="900" height="1240" style="background:#ffffff;font-family:'Noto Sans TC','Inter',sans-serif;">
+                    <rect width="900" height="1240" fill="#ffffff"/>
+                    <text x="50" y="65" fill="#0f172a" font-size="34" font-weight="900">行程</text>
+                    <text x="50" y="100" fill="#1e293b" font-size="16" font-weight="700">預訂資訊</text>
+                    <text x="50" y="124" fill="#475569" font-size="14">請自行列印收據及行程，以確保旅程順利。</text>
+                    <text x="50" y="150" fill="#0f172a" font-size="16" font-weight="800">訂單編號 1616334705696092</text>
+
+                    <g transform="translate(650, 40)">
+                        <text x="200" y="28" text-anchor="end" fill="#1d4ed8" font-size="24" font-weight="900">Trip.com Group</text>
+                        <rect x="130" y="42" width="70" height="28" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+                        <text x="165" y="62" text-anchor="middle" fill="#0f172a" font-size="16" font-weight="900" letter-spacing="2">IATA</text>
+                    </g>
+                    <line x1="50" y1="168" x2="850" y2="168" stroke="#0f172a" stroke-width="2"/>
+
+                    <!-- 去程 -->
+                    <text x="50" y="198" fill="#0f172a" font-size="16" font-weight="800">高雄 - 曼谷</text>
+                    <g transform="translate(50, 210)">
+                        <rect x="0" y="0" width="800" height="78" fill="#ffffff" stroke="#64748b" stroke-width="1.5"/>
+                        <rect x="0" y="0" width="800" height="36" fill="#f1f5f9" stroke="#64748b" stroke-width="1"/>
+                        <line x1="250" y1="0" x2="250" y2="78" stroke="#64748b" stroke-width="1"/>
+                        <line x1="380" y1="0" x2="380" y2="78" stroke="#64748b" stroke-width="1"/>
+                        <line x1="590" y1="0" x2="590" y2="78" stroke="#64748b" stroke-width="1"/>
+                        <text x="14" y="24" fill="#1e293b" font-size="14" font-weight="800">姓名</text>
+                        <text x="264" y="24" fill="#1e293b" font-size="14" font-weight="800">艙等</text>
+                        <text x="394" y="24" fill="#1e293b" font-size="14" font-weight="800">電子機票號碼</text>
+                        <text x="604" y="24" fill="#1e293b" font-size="14" font-weight="800">預訂參考編號</text>
+
+                        <text x="14" y="60" fill="#0f172a" font-size="16" font-weight="800">LIN (姓) JING (名)</text>
+                        <text x="264" y="60" fill="#0f172a" font-size="15">經濟艙</text>
+                        <text x="394" y="60" fill="#0f172a" font-family="monospace" font-size="16" font-weight="800">160-5209416257</text>
+                        <text x="604" y="60" fill="#1d4ed8" font-family="monospace" font-size="17" font-weight="900">Y5K950</text>
+                    </g>
+
+                    <!-- 回程 -->
+                    <text x="50" y="318" fill="#0f172a" font-size="16" font-weight="800">曼谷 - 高雄</text>
+                    <g transform="translate(50, 330)">
+                        <rect x="0" y="0" width="800" height="78" fill="#ffffff" stroke="#64748b" stroke-width="1.5"/>
+                        <rect x="0" y="0" width="800" height="36" fill="#f1f5f9" stroke="#64748b" stroke-width="1"/>
+                        <line x1="250" y1="0" x2="250" y2="78" stroke="#64748b" stroke-width="1"/>
+                        <line x1="380" y1="0" x2="380" y2="78" stroke="#64748b" stroke-width="1"/>
+                        <line x1="590" y1="0" x2="590" y2="78" stroke="#64748b" stroke-width="1"/>
+                        <text x="14" y="24" fill="#1e293b" font-size="14" font-weight="800">姓名</text>
+                        <text x="264" y="24" fill="#1e293b" font-size="14" font-weight="800">艙等</text>
+                        <text x="394" y="24" fill="#1e293b" font-size="14" font-weight="800">電子機票號碼</text>
+                        <text x="604" y="24" fill="#1e293b" font-size="14" font-weight="800">預訂參考編號</text>
+
+                        <text x="14" y="60" fill="#0f172a" font-size="16" font-weight="800">LIN (姓) JING (名)</text>
+                        <text x="264" y="60" fill="#0f172a" font-size="15">經濟艙</text>
+                        <text x="394" y="60" fill="#0f172a" font-family="monospace" font-size="16" font-weight="800">297-9026340267</text>
+                        <text x="604" y="60" fill="#be123c" font-family="monospace" font-size="17" font-weight="900">DQDYIX</text>
+                    </g>
+
+                    <!-- 航班資訊 -->
+                    <text x="50" y="440" fill="#0f172a" font-size="17" font-weight="800">航班資訊</text>
+                    <g transform="translate(50, 452)">
+                        <rect x="0" y="0" width="800" height="430" fill="#ffffff" stroke="#64748b" stroke-width="1.5"/>
+
+                        <rect x="0" y="0" width="800" height="34" fill="#e2e8f0"/>
+                        <text x="14" y="23" fill="#0f172a" font-size="14" font-weight="800">高雄 - 曼谷（第一段：高雄 - 香港）</text>
+                        <text x="14" y="56" fill="#475569" font-size="14" font-weight="700">出發</text>
+                        <text x="130" y="56" fill="#0f172a" font-size="15" font-weight="700">2026年11月20日 11:25，高雄國際機場 I</text>
+                        <text x="14" y="82" fill="#475569" font-size="14" font-weight="700">抵達</text>
+                        <text x="130" y="82" fill="#0f172a" font-size="15" font-weight="700">2026年11月20日 13:15，香港國際機場 T1</text>
+                        <text x="14" y="108" fill="#475569" font-size="14" font-weight="700">航空公司</text>
+                        <text x="130" y="108" fill="#0f172a" font-size="15" font-weight="800">國泰航空公司 CX431</text>
+
+                        <rect x="0" y="122" width="800" height="34" fill="#fef3c7"/>
+                        <text x="14" y="144" fill="#92400e" font-size="14" font-weight="800">轉機：香港｜香港國際機場 T1｜1小時15分鐘 · 行李直達</text>
+
+                        <rect x="0" y="156" width="800" height="34" fill="#e2e8f0"/>
+                        <text x="14" y="179" fill="#0f172a" font-size="14" font-weight="800">香港 - 曼谷</text>
+                        <text x="14" y="212" fill="#475569" font-size="14" font-weight="700">出發</text>
+                        <text x="130" y="212" fill="#0f172a" font-size="15" font-weight="700">2026年11月20日 14:30，香港國際機場 T1</text>
+                        <text x="14" y="238" fill="#475569" font-size="14" font-weight="700">抵達</text>
+                        <text x="130" y="238" fill="#0f172a" font-size="15" font-weight="700">2026年11月20日 16:40，素萬那普機場</text>
+                        <text x="14" y="264" fill="#475569" font-size="14" font-weight="700">航空公司</text>
+                        <text x="130" y="264" fill="#0f172a" font-size="15" font-weight="800">國泰航空公司 CX751</text>
+
+                        <rect x="0" y="284" width="800" height="36" fill="#ffe4e6"/>
+                        <text x="14" y="308" fill="#9f1239" font-size="15" font-weight="900">回程航班：曼谷 - 高雄</text>
+                        <text x="14" y="344" fill="#475569" font-size="14" font-weight="700">出發</text>
+                        <text x="130" y="344" fill="#0f172a" font-size="15" font-weight="900">2026年11月27日 18:35，素萬那普機場</text>
+                        <text x="14" y="372" fill="#475569" font-size="14" font-weight="700">抵達</text>
+                        <text x="130" y="372" fill="#0f172a" font-size="15" font-weight="700">2026年11月27日 22:55，高雄國際機場 I</text>
+                        <text x="14" y="400" fill="#475569" font-size="14" font-weight="700">航空公司</text>
+                        <text x="130" y="400" fill="#be123c" font-size="16" font-weight="900">中華航空公司 CI840</text>
+                    </g>
+
+                    <!-- 行李限額 -->
+                    <g transform="translate(50, 905)">
+                        <rect x="0" y="0" width="800" height="175" rx="4" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/>
+                        <text x="16" y="28" fill="#0f172a" font-size="15" font-weight="800">行李限額 — LIN JING (成人)</text>
+                        <text x="16" y="56" fill="#334155" font-size="14">• 隨身物品：每人 1 件，每件尺寸不可超過 40x15x30 厘米，必須放在您前面的座位下方。</text>
+                        <text x="16" y="82" fill="#334155" font-size="14">• 手提行李：每人 1 件，每件尺寸不可超過 56x36x23 厘米（約 20 吋，隨身＋手提總重不超過 7 公斤）。</text>
+                        <text x="16" y="108" fill="#0f172a" font-size="14" font-weight="800">• 託運行李：每人 1 件，每件 23 公斤，每件尺寸（長闊高總和）不可超過 158 厘米（約 28 吋）。</text>
+                        <text x="16" y="144" fill="#475569" font-size="13">• 我們建議您最遲於航班起飛前 3 小時抵達機場，以確保您有足夠的時間辦理登機手續。</text>
+                    </g>
+                </svg>`
+            }
+        ];
+
+        window.renderVoucherGallery = function() {
+            const gallery = document.getElementById('voucher-images-gallery');
+            if (!gallery) return;
+
+            const list = OFFICIAL_VOUCHER_IMAGES.filter(v => currentVoucherFilter === 'ALL' || v.id === currentVoucherFilter);
+            gallery.innerHTML = list.map(v => {
+                const dataUrl = svgToDataUrl(v.svg);
+                return `
+                <div class="bg-white dark:bg-slate-900 rounded-3xl p-3.5 sm:p-4 border-2 border-slate-200 dark:border-slate-800 shadow-md flex flex-col justify-between gap-3">
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="min-w-0">
+                            <span class="px-2 py-0.5 rounded bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300 text-[10px] font-black">官方憑證圖檔</span>
+                            <h3 class="font-black text-sm sm:text-base text-slate-900 dark:text-white mt-1 truncate">${v.title}</h3>
+                            <p class="text-[11px] text-slate-500 truncate">${v.subtitle}</p>
+                        </div>
+                        <button type="button" onclick="window.downloadSvgAsPng('${v.id}')"
+                                class="shrink-0 px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shadow-sm">
+                            💾 存成圖檔
+                        </button>
+                    </div>
+
+                    <!-- Clickable High-Res Ticket Image -->
+                    <div onclick="window.openVoucherLightbox('${v.id}')"
+                         class="voucher-img-card relative rounded-2xl overflow-hidden border border-slate-300 dark:border-slate-700 bg-white">
+                        <img src="${dataUrl}" alt="${v.title}" class="w-full h-auto block select-none" />
+                        <div class="absolute bottom-2 right-2 px-3 py-1.5 rounded-xl bg-slate-900/85 text-white font-black text-xs backdrop-blur-sm shadow">
+                            🔍 點擊全螢幕放大出示
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between gap-2 pt-1">
+                        <button type="button" onclick="window.openVoucherLightbox('${v.id}')"
+                                class="flex-1 py-2 rounded-xl bg-slate-900 dark:bg-teal-500 text-white dark:text-slate-950 font-black text-xs text-center">
+                            🔍 全螢幕查驗模式
+                        </button>
+                        <a href="${v.mapUrl}" target="_blank" rel="noopener noreferrer"
+                           class="px-3 py-2 rounded-xl bg-teal-600 text-white font-black text-xs shrink-0">
+                            ${v.mapLabel}
+                        </a>
+                    </div>
+                </div>`;
+            }).join('');
+        };
+
+        window.filterVoucherImgs = function(filterId) {
+            currentVoucherFilter = filterId;
+            document.querySelectorAll('.vfilter-btn').forEach(btn => {
+                if (btn.getAttribute('data-vfilter') === filterId) {
+                    btn.className = 'vfilter-btn shrink-0 px-3.5 py-2 rounded-xl bg-slate-900 text-white dark:bg-teal-500 dark:text-slate-950 font-black text-xs shadow-sm';
+                } else {
+                    btn.className = 'vfilter-btn shrink-0 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs';
+                }
+            });
+            window.renderVoucherGallery();
+        };
+
+        window.openVoucherLightbox = function(voucherId, customImgSrc, customTitle) {
+            const modal = document.getElementById('voucher-lightbox');
+            const img = document.getElementById('lightbox-img');
+            const title = document.getElementById('lightbox-title');
+            const dlBtn = document.getElementById('lightbox-download-btn');
+            if (!modal || !img) return;
+
+            if (customImgSrc) {
+                img.src = customImgSrc;
+                title.textContent = customTitle || 'PDF 原始憑證圖檔';
+                dlBtn.onclick = function() {
+                    const a = document.createElement('a');
+                    a.href = customImgSrc;
+                    a.download = (customTitle || 'ticket') + '.png';
+                    a.click();
+                };
+            } else {
+                const v = OFFICIAL_VOUCHER_IMAGES.find(item => item.id === voucherId);
+                if (!v) return;
+                img.src = svgToDataUrl(v.svg);
+                title.textContent = v.title;
+                dlBtn.onclick = function() { window.downloadSvgAsPng(v.id); };
+            }
+            modal.classList.remove('hidden');
+        };
+
+        window.closeVoucherLightbox = function() {
+            document.getElementById('voucher-lightbox')?.classList.add('hidden');
+        };
+
+        window.downloadSvgAsPng = function(voucherId) {
+            const v = OFFICIAL_VOUCHER_IMAGES.find(item => item.id === voucherId);
+            if (!v) return;
+            const img = new Image();
+            const svgUrl = svgToDataUrl(v.svg);
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                canvas.width = 1800;
+                canvas.height = 2480;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                const pngUrl = canvas.toDataURL('image/png');
+                const a = document.createElement('a');
+                a.href = pngUrl;
+                a.download = v.filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.showToast(`💾 已下載高畫質圖檔：${v.filename}`);
+            };
+            img.src = svgUrl;
+        };
+
+        window.downloadAllVoucherPngs = function() {
+            OFFICIAL_VOUCHER_IMAGES.forEach((v, idx) => {
+                setTimeout(() => window.downloadSvgAsPng(v.id), idx * 450);
+            });
+        };
+
+        // Real PDF.js Converter: Convert user's local PDF files into high-res PNG images & persist in localStorage
+        window.handlePdfToImages = async function(files) {
+            if (!files || files.length === 0) return;
+            window.showToast('⏳ 正在將 PDF 轉換為高畫質圖片...');
+            const savedPages = JSON.parse(localStorage.getItem('kp_custom_pdf_imgs') || '[]');
+
+            for (const file of Array.from(files)) {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    await new Promise(resolve => {
+                        reader.onload = e => {
+                            savedPages.push({ title: file.name, dataUrl: e.target.result });
+                            resolve();
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                } else if (file.type === 'application/pdf' && window.pdfjsLib) {
+                    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                    const arrayBuf = await file.arrayBuffer();
+                    const pdf = await window.pdfjsLib.getDocument({ data: arrayBuf }).promise;
+                    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                        const page = await pdf.getPage(pageNum);
+                        const viewport = page.getViewport({ scale: 2.0 });
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        canvas.width = viewport.width;
+                        canvas.height = viewport.height;
+                        await page.render({ canvasContext: ctx, viewport }).promise;
+                        savedPages.push({
+                            title: `${file.name} (Page ${pageNum})`,
+                            dataUrl: canvas.toDataURL('image/png', 0.92)
+                        });
+                    }
+                }
+            }
+
+            try {
+                localStorage.setItem('kp_custom_pdf_imgs', JSON.stringify(savedPages));
+            } catch (e) {
+                console.warn('Storage quota exceeded, keeping in session only.');
+            }
+            window.renderSavedPdfImages(savedPages);
+            window.showToast('✅ 已將 PDF 轉為高畫質圖檔！點擊即可全螢幕出示');
+        };
+
+        window.renderSavedPdfImages = function(pagesOverride) {
+            const wrap = document.getElementById('custom-pdf-images-wrap');
+            const grid = document.getElementById('custom-pdf-images-grid');
+            if (!wrap || !grid) return;
+            const pages = pagesOverride || JSON.parse(localStorage.getItem('kp_custom_pdf_imgs') || '[]');
+            if (!pages || pages.length === 0) {
+                wrap.classList.add('hidden');
+                return;
+            }
+            wrap.classList.remove('hidden');
+            grid.innerHTML = pages.map((p, idx) => `
+                <div class="bg-white text-slate-900 rounded-2xl p-3 shadow-md space-y-2">
+                    <div class="flex items-center justify-between text-xs font-black">
+                        <span class="truncate">${p.title}</span>
+                        <span class="text-teal-600 shrink-0">點擊放大</span>
+                    </div>
+                    <img src="${p.dataUrl}" alt="${p.title}"
+                         onclick="window.openVoucherLightbox(null, '${p.dataUrl}', '${p.title.replace(/'/g, '')}')"
+                         class="w-full h-auto rounded-xl border border-slate-200 cursor-zoom-in" />
+                </div>
+            `).join('');
+        };
+
+        window.clearSavedPdfImages = function() {
+            localStorage.removeItem('kp_custom_pdf_imgs');
+            window.renderSavedPdfImages([]);
+            window.showToast('已清除自訂匯入的圖檔');
+        };
+
         window.refreshAllViews = function() {
             window.renderHubs();
+            window.renderVoucherGallery();
+            window.renderSavedPdfImages();
             window.renderScooterTiers();
             window.renderScooterShops();
             window.renderAllSpots();
